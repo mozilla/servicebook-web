@@ -30,10 +30,10 @@ class EditTest(BaseTest):
             form = user.forms[0]
             old_name = form['firstname'].value
             form['firstname'] = 'new name'
-            form.submit()
+            res = form.submit()
 
             # let's check it changed
-            self.assertTrue(b'new name' in self.app.get('/users/1').body)
+            self.assertTrue(b'New name' in self.app.get('/users/1').body)
 
             # change it back to the old value
             user = self.app.get('/users/1/edit')

@@ -1,26 +1,5 @@
 from collections import OrderedDict
-from wtforms_alchemy import ModelForm, QuerySelectField
-
-from servicebook.mappings import Project, User, Group, Deployment
-
-
-class BaseForm(ModelForm):
-    def __iter__(self):
-        field_order = getattr(self, 'field_order', None)
-        if field_order:
-            temp_fields = []
-            for name in field_order:
-                if name == '*':
-                    for k, v in self._fields.items():
-                        if k not in field_order:
-                            temp_fields.append((k, v))
-                    break
-                else:
-                    temp_fields.append((name, self._fields[name]))
-
-            self._fields = OrderedDict(temp_fields)
-
-        return super(BaseForm, self).__iter__()
+from wtforms import Form, BooleanField, StringField, IntegerField
 
 
 def get_users():
@@ -39,25 +18,28 @@ def get_projects():
     return Session().query(Project).order_by(Project.name)
 
 
-class ProjectForm(BaseForm):
-    class Meta:
-        model = Project
+class ProjectForm(Form):
 
     field_order = ('name', 'description', 'primary', 'secondary', 'group',
                    'bz_product', 'bz_component', 'irc')
-    primary = QuerySelectField('primary', query_factory=get_users)
-    secondary = QuerySelectField('secondary', query_factory=get_users)
-    group = QuerySelectField('group', query_factory=get_groups,
-                             get_label='name')
+    #primary = QuerySelectField('primary', query_factory=get_users)
+    #secondary = QuerySelectField('secondary', query_factory=get_users)
+    #group = QuerySelectField('group', query_factory=get_groups,
+    #                         get_label='name')
 
 
-class DeploymentForm(BaseForm):
-    class Meta:
-        model = Deployment
+class DeploymentForm(Form):
+    name = StringField()
+    endpoint = StringField()
+    project_id = IntegerField()
 
-    field_order = ('name', 'endpoint')
+
+class UserForm(Form):
+    firstname = StringField()
+    lastname = StringField()
+    mozqa = BooleanField()
+    github = StringField()
+    editor = BooleanField()
+    email = StringField()
 
 
-class UserForm(BaseForm):
-    class Meta:
-        model = User

@@ -22,7 +22,7 @@ class FrontEndTest(BaseTest):
         with open(yamlf) as f:
             sw_resp = yaml.load(f.read())
 
-        with requests_mock.Mocker() as m:
+        with requests_mock.Mocker(real_http=True) as m:
             m.get(bz_matcher, text=json.dumps(bz_resp))
             m.get(sw_matcher, text=json.dumps(sw_resp))
             project_absearch = self.app.get(first_proj_link)

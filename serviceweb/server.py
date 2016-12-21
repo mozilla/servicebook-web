@@ -12,7 +12,7 @@ from serviceweb.auth import get_user, GithubAuth
 from serviceweb.views.auth import unauthorized_view
 from serviceweb.mozillians import Mozillians
 from serviceweb.translations import APP_TRANSLATIONS
-from serviceweb.db import ServiceBook
+from serviceweb.db import ServiceBook, fullname as _fullname
 
 
 HERE = os.path.dirname(__file__)
@@ -59,9 +59,7 @@ def create_app(ini_file=DEFAULT_INI_FILE):
 
     @app.template_filter('fullname')
     def fullname(s):
-        firstname = s['firstname'].capitalize()
-        lastname = s['lastname'].capitalize()
-        return '%s %s' % (firstname, lastname)
+        return _fullname(s)
 
     logging.config.fileConfig(ini_file)
     return app
@@ -69,7 +67,7 @@ def create_app(ini_file=DEFAULT_INI_FILE):
 
 def main():
     app = create_app()
-    app.run(debug=_DEBUG, host='0.0.0.0', port=5001)
+    app.run(debug=_DEBUG, host='0.0.0.0', port=5000)
 
 
 if __name__ == "__main__":

@@ -6,6 +6,7 @@ from flask import Blueprint
 from flask import request, redirect
 
 from serviceweb.auth import only_for_editors
+from serviceweb.forms import ProjectForm, DeploymentForm
 
 
 projects = Blueprint('projects', __name__)
@@ -20,8 +21,8 @@ _BUGZILLA = ('https://bugzilla.mozilla.org/rest/bug?' + _STATUSES +
 @only_for_editors
 def edit_project(project_id):
     project = projects.app.db.get_entry('project', project_id)
-
     form = ProjectForm(request.form, project)
+
     if request.method == 'POST' and form.validate():
         form.populate_obj(project)
         Session.add(project)
@@ -38,6 +39,7 @@ def edit_project(project_id):
 @projects.route("/projects/", methods=['GET', 'POST'])
 @only_for_editors
 def add_project():
+    raise NotImplementedError
     form = ProjectForm(request.form)
     if request.method == 'POST' and form.validate():
         project = Project()
@@ -101,6 +103,7 @@ def project(project_id):
                 methods=['GET', 'POST'])
 @only_for_editors
 def add_deployment(project_id):
+    raise NotImplementedError
     q = Session.query(Project).filter(Project.id == project_id)
     project = q.one()
 
@@ -122,6 +125,7 @@ def add_deployment(project_id):
                 methods=['GET'])
 @only_for_editors
 def remove_deployment(project_id, depl_id):
+    raise NotImplementedError
     q = Session.query(Deployment).filter(Deployment.id == depl_id)
     depl = q.one()
     Session.delete(depl)
@@ -133,20 +137,18 @@ def remove_deployment(project_id, depl_id):
                 methods=['GET', 'POST'])
 @only_for_editors
 def edit_deployment(project_id, depl_id):
-    q = Session.query(Deployment).filter(Deployment.id == depl_id)
-    depl = q.one()
+    depl = projects.app.db.get_entry('deployment', depl_id)
     project = depl.project
-
     form = DeploymentForm(request.form, depl)
+
     if request.method == 'POST' and form.validate():
         form.populate_obj(depl)
-        Session.add(depl)
-        Session.commit()
-        return redirect('/projects/%d' % (project.id))
+        projects.app.db.update_entry('deployment', depl)
+        return redirect('/projects/%d' % (project_id))
 
     form_action = '/projects/%d/deployments/%d/edit'
-    backlink = '/projects/%d' % project.id
-    action = 'Edit %r for %s' % (depl.name, project.name)
+    backlink = '/projects/%d' % project_id
+    action = 'Edit %r for %s' % (depl.name, project['name'])
     return render_template("edit.html", form=form, action=action,
                            project=project, backlink=backlink,
-                           form_action=form_action % (project.id, depl.id))
+                           form_action=form_action % (project_id, depl.id))

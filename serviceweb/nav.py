@@ -28,7 +28,10 @@ def build_nav():
         link = Link('Github Login', '/login')
     else:
         elements.append(View('Manage Users', 'users.users_view'))
-        link = Link('%s (logout)' % str(user), '/logout')
+        firstname = user['firstname'].capitalize()
+        lastname = user['lastname'].capitalize()
+        login = '%s %s' % (firstname, lastname)
+        link = Link('%s (logout)' % login, '/logout')
 
     elements.append(link)
 
