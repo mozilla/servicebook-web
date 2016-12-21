@@ -1,0 +1,7 @@
+include README.rst
+include Makefile
+include requirements.txt
+include requirements-test.txt
+include tox.ini
+include .travis.yml
+include serviceweb/dump.json

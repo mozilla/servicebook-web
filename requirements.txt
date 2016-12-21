@@ -1,0 +1,9 @@
+requests
+flask
+flask-bootstrap
+flask-iniconfig
+flask-nav
+Flask-WTF
+PyYAML
+rauth
+-e git+https://github.com/tarekziade/smwogger#egg=smwogger

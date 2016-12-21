@@ -1,0 +1,76 @@
+import json
+import os
+import logging.config
+
+from flask import Flask, g
+from flask_bootstrap import Bootstrap
+from flask.ext.iniconfig import INIConfig
+
+from serviceweb.nav import nav
+from serviceweb.views import blueprints
+from serviceweb.auth import get_user, GithubAuth
+from serviceweb.views.auth import unauthorized_view
+from serviceweb.mozillians import Mozillians
+from serviceweb.translations import APP_TRANSLATIONS
+from serviceweb.db import ServiceBook
+
+
+HERE = os.path.dirname(__file__)
+DEFAULT_INI_FILE = os.path.join(HERE, '..', 'serviceweb.ini')
+_DEBUG = True
+
+
+def create_app(ini_file=DEFAULT_INI_FILE):
+    app = Flask(__name__, static_url_path='/static')
+    INIConfig(app)
+    app.config.from_inifile(ini_file)
+    app.secret_key = app.config['common']['secret_key']
+    sqluri = app.config['common']['sqluri']
+
+    Bootstrap(app)
+    GithubAuth(app)
+    Mozillians(app)
+
+    for bp in blueprints:
+        app.register_blueprint(bp)
+        bp.app = app
+
+    app.db = ServiceBook(app.config['common']['service_book'])
+    app.register_error_handler(401, unauthorized_view)
+    nav.init_app(app)
+
+    app.add_url_rule(
+           app.static_url_path + '/<path:filename>',
+           endpoint='static',
+           view_func=app.send_static_file)
+
+    @app.before_request
+    def before_req():
+        g.user = get_user(app)
+        g.debug = _DEBUG
+
+    @app.template_filter('translate')
+    def translate_string(s):
+        return APP_TRANSLATIONS.get(s, s)
+
+    @app.template_filter('capitalize')
+    def capitalize_string(s):
+        return s[0].capitalize() + s[1:]
+
+    @app.template_filter('fullname')
+    def fullname(s):
+        firstname = s['firstname'].capitalize()
+        lastname = s['lastname'].capitalize()
+        return '%s %s' % (firstname, lastname)
+
+    logging.config.fileConfig(ini_file)
+    return app
+
+
+def main():
+    app = create_app()
+    app.run(debug=_DEBUG, host='0.0.0.0', port=5001)
+
+
+if __name__ == "__main__":
+    main()
