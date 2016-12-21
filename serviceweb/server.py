@@ -1,4 +1,3 @@
-import json
 import os
 import logging.config
 
@@ -25,7 +24,6 @@ def create_app(ini_file=DEFAULT_INI_FILE):
     INIConfig(app)
     app.config.from_inifile(ini_file)
     app.secret_key = app.config['common']['secret_key']
-    sqluri = app.config['common']['sqluri']
 
     Bootstrap(app)
     GithubAuth(app)
@@ -46,8 +44,9 @@ def create_app(ini_file=DEFAULT_INI_FILE):
 
     @app.before_request
     def before_req():
-        g.user = get_user(app)
         g.debug = _DEBUG
+        g.db = app.db
+        g.user = get_user(app)
 
     @app.template_filter('translate')
     def translate_string(s):

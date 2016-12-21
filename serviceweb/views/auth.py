@@ -44,7 +44,7 @@ def authorized():
 
     authorization = github.get_auth_session(data=data)
     github_user = authorization.get('user').json()
-    db_user = github2dbuser(github_user, auth.app.db)
+    db_user = github2dbuser(github_user)
 
     session['token'] = authorization.access_token
     session['user_id'] = db_user['id']

@@ -11,11 +11,11 @@ def GithubAuth(app):
     app.extensions['github'] = github
 
 
-def github2dbuser(github_user, db):
+def github2dbuser(github_user):
     filters = [{'name': 'github',
                 'op': 'eq',
                 'val': github_user['login']}]
-    res = db.get_entries('user', filters=filters)
+    res = g.db.get_entries('user', filters=filters)
 
     if res['num_results'] > 0:
         db_user = res['objects'][0]
@@ -26,9 +26,12 @@ def github2dbuser(github_user, db):
             firstname, lastname = name
         else:
             firstname = lastname = name
-        login = github_user['login']
 
-        raise NotImplementedError
+        login = github_user['login']
+        user = {'github': login, 'firstname': firstname,
+                'lastname': lastname,
+                'mozqa': False, 'editor': False}
+        db_user = g.db.create_entry('user', user)
 
     return db_user
 
@@ -42,7 +45,7 @@ def get_user(app):
     resp = auth.get('/user')
     if resp.status_code == 200:
         user = resp.json()
-        return github2dbuser(user, app.db)
+        return github2dbuser(user)
     else:
         return None
 

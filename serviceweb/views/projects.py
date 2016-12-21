@@ -3,10 +3,11 @@ import requests
 
 from flask import render_template
 from flask import Blueprint
-from flask import request, redirect
+from flask import request, redirect, g
 
 from serviceweb.auth import only_for_editors
 from serviceweb.forms import ProjectForm, DeploymentForm
+from serviceweb.db import objdict
 
 
 projects = Blueprint('projects', __name__)
@@ -20,33 +21,30 @@ _BUGZILLA = ('https://bugzilla.mozilla.org/rest/bug?' + _STATUSES +
 @projects.route("/projects/<int:project_id>/edit", methods=['GET', 'POST'])
 @only_for_editors
 def edit_project(project_id):
-    project = projects.app.db.get_entry('project', project_id)
+    project = g.db.get_entry('project', project_id)
     form = ProjectForm(request.form, project)
 
     if request.method == 'POST' and form.validate():
         form.populate_obj(project)
-        Session.add(project)
-        Session.commit()
-        return redirect('/projects/%d' % project.id)
+        g.db.update_entry('project', project)
+        return redirect('/projects/%d' % project_id)
 
     action = 'Edit %r' % project.name
-    backlink = '/projects/%d' % project.id
+    backlink = '/projects/%d' % project_id
     return render_template("edit.html", form=form, action=action,
                            backlink=backlink,
-                           form_action='/projects/%d/edit' % project.id)
+                           form_action='/projects/%d/edit' % project_id)
 
 
 @projects.route("/projects/", methods=['GET', 'POST'])
 @only_for_editors
 def add_project():
-    raise NotImplementedError
     form = ProjectForm(request.form)
     if request.method == 'POST' and form.validate():
-        project = Project()
+        project = objdict()
         form.populate_obj(project)
-        Session.add(project)
-        Session.commit()
-        return redirect('/projects/%d' % project.id)
+        project_id = g.db.create_entry('project', project)['id']
+        return redirect('/projects/%d' % project_id)
 
     action = 'Add a new project'
     return render_template("edit.html", form=form, action=action,
@@ -55,7 +53,7 @@ def add_project():
 
 @projects.route("/projects/<int:project_id>")
 def project(project_id):
-    project = projects.app.db.get_entry('project', project_id)
+    project = g.db.get_entry('project', project_id)
 
     # scraping bugzilla info
     if project['bz_product']:
@@ -103,33 +101,25 @@ def project(project_id):
                 methods=['GET', 'POST'])
 @only_for_editors
 def add_deployment(project_id):
-    raise NotImplementedError
-    q = Session.query(Project).filter(Project.id == project_id)
-    project = q.one()
-
     form = DeploymentForm(request.form)
-    if request.method == 'POST' and form.validate():
-        deployment = Deployment()
-        deployment.project = project
-        form.populate_obj(deployment)
-        Session.add(project)
-        Session.commit()
-        return redirect('/projects/%d' % project.id)
+    project = g.db.get_entry('project', project_id)
 
-    action = 'Add a new deployment for %s' % str(project)
+    if request.method == 'POST' and form.validate():
+        deployment = objdict({'project_id': project_id})
+        form.populate_obj(deployment)
+        g.db.create_entry('deployment', deployment)
+        return redirect('/projects/%d' % project_id)
+
+    action = 'Add a new deployment for %s' % project.name
     return render_template("edit.html", form=form, action=action,
-                           form_action="/projects/%s/deployment" % project_id)
+                           form_action="/projects/%s/deployments" % project_id)
 
 
 @projects.route("/projects/<int:project_id>/deployments/<int:depl_id>/delete",
                 methods=['GET'])
 @only_for_editors
 def remove_deployment(project_id, depl_id):
-    raise NotImplementedError
-    q = Session.query(Deployment).filter(Deployment.id == depl_id)
-    depl = q.one()
-    Session.delete(depl)
-    Session.commit()
+    g.db.delete_entry('deployment', depl_id)
     return redirect('/projects/%d' % (project_id))
 
 
@@ -137,13 +127,13 @@ def remove_deployment(project_id, depl_id):
                 methods=['GET', 'POST'])
 @only_for_editors
 def edit_deployment(project_id, depl_id):
-    depl = projects.app.db.get_entry('deployment', depl_id)
+    depl = g.db.get_entry('deployment', depl_id)
     project = depl.project
     form = DeploymentForm(request.form, depl)
 
     if request.method == 'POST' and form.validate():
         form.populate_obj(depl)
-        projects.app.db.update_entry('deployment', depl)
+        g.db.update_entry('deployment', depl)
         return redirect('/projects/%d' % (project_id))
 
     form_action = '/projects/%d/deployments/%d/edit'
