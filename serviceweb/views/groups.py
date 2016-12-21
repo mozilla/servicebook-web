@@ -7,11 +7,11 @@ groups = Blueprint('groups', __name__)
 
 @groups.route("/groups/<name>")
 def group_view(name):
-    group = Session.query(Group).filter(Group.name == name).one()
+    group = groups.app.db.get_entry('group', name, 'name')
+
     # should be an attribute in the group table
-    p = Session.query(Project)
-    projects = p.filter(Project.group_name == name)
-    projects = projects.order_by(Project.name.asc())
+    filters = [{'name': 'group_name', 'op': 'eq', 'val': name}]
+    projects = groups.app.db.get_entries('project', filters)['objects']
     backlink = '/'
     return render_template('group.html', projects=projects, group=group,
                            backlink=backlink)

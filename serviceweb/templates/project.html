@@ -56,8 +56,8 @@
        <em>Homepage</em>
        <a href="{{project_info['x-mozilla-services']['homepage']}}">{{project_info['x-mozilla-services']['homepage']}}</a></li>
      {% endif %}
-     <li class="list-group-item"><em>QA Primary</em> <strong>{{project.primary}}</strong></li>
-     <li class="list-group-item"><em>QA Secondary</em> <strong>{{project.secondary}}</strong></li>
+     <li class="list-group-item"><em>QA Primary</em> <strong>{{project.primary|fullname}}</strong></li>
+	 <li class="list-group-item"><em>QA Secondary</em> <strong>{{project.secondary|fullname}}</strong></li>
      <li class="list-group-item"><em>IRC</em>
          {% if project.irc %}
          <strong>{{project.irc}}</strong>
@@ -65,7 +65,7 @@
          <strong>Too many IRC channels already.</strong>
          {% endif %}
      </li>
-     <li class="list-group-item"><em>Group</em> <strong>{{project.group}}</strong></li>
+     <li class="list-group-item"><em>Group</em> <strong>{{project.group.name}}</strong></li>
   </ul>
   </div>
   </div>

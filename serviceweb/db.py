@@ -21,8 +21,8 @@ class ServiceBook(object):
         res = self._get(table, params=params)
         return res
 
-    def get_entry(self, table, entry_id):
-        filters = [{'name': 'id', 'op': 'eq', 'val': entry_id}]
+    def get_entry(self, table, entry_id, entry_field='id'):
+        filters = [{'name': entry_field, 'op': 'eq', 'val': entry_id}]
         query = json.dumps({'filters': filters})
         params = {'q': query}
         res = self._get(table, params=params)

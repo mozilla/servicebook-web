@@ -53,14 +53,17 @@ def add_project():
 
 @projects.route("/projects/<int:project_id>")
 def project(project_id):
-    q = Session.query(Project).filter(Project.id == project_id)
-    project = q.one()
+    project = projects.app.db.get_entry('project', project_id)
 
     # scraping bugzilla info
-    if project.bz_product:
-        bugzilla = _BUGZILLA % (project.bz_product, project.bz_component)
-        res = requests.get(bugzilla)
-        bugs = res.json()['bugs']
+    if project['bz_product']:
+        bugzilla = _BUGZILLA % (project['bz_product'],
+                                project['bz_component'])
+        try:
+            res = requests.get(bugzilla)
+            bugs = res.json()['bugs']
+        except requests.exceptions.SSLError:
+            bugs = []
     else:
         bugs = []
 
@@ -68,14 +71,17 @@ def project(project_id):
     # stage one (fallback to the first one)
     swagger = None
 
-    if len(project.deployments) > 0:
-        for depl in project.deployments:
-            if depl.name == 'stage':
-                swagger = depl.endpoint.lstrip('/') + '/__api__'
+    def _api(depl):
+        return depl['endpoint'].lstrip('/') + '/__api__'
+
+    if len(project['deployments']) > 0:
+        for depl in project['deployments']:
+            if depl['name'] == 'stage':
+                swagger = _api(depl)
                 break
 
         if swagger is None:
-            swagger = project.deployments[0].endpoint.lstrip('/') + '/__api__'
+            swagger = _api(project['deployments'][0])
 
     project_info = None
 
@@ -85,7 +91,7 @@ def project(project_id):
             project_info = yaml.load(res.content)['info']
 
     backlink = '/'
-    edit = '/projects/%d/edit' % project.id
+    edit = '/projects/%d/edit' % project['id']
     return render_template('project.html', project=project, bugs=bugs,
                            edit=edit,
                            project_info=project_info, backlink=backlink)
