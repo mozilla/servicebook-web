@@ -7,12 +7,11 @@ RUN \
     apt-get install -y python3-dev libssl-dev libffi-dev
 
 
-WORKDIR /code
 ADD ./requirements.txt /code/requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install -r /code/requirements.txt
 
 ADD . /code
-RUN python setup.py develop
+RUN cd /code; python setup.py develop
 
 EXPOSE 5000
 CMD serviceweb

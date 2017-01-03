@@ -1,5 +1,7 @@
 version: '2'
 services:
+    servicebook:
+        image: servicebook/dev
     web:
         build: .
         ports:
@@ -8,7 +10,3 @@ services:
         - servicebook
         volumes:
         - .:/code    
-    servicebook:
-        image: servicebook/dev
-        ports:
-        - "5001:5001"
