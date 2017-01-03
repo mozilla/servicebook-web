@@ -11,7 +11,9 @@ from serviceweb.auth import get_user, GithubAuth
 from serviceweb.views.auth import unauthorized_view
 from serviceweb.mozillians import Mozillians
 from serviceweb.translations import APP_TRANSLATIONS
-from serviceweb.db import ServiceBook, fullname as _fullname
+
+from serviceweb.util import fullname as _fullname
+from restjson.client import Client
 
 
 HERE = os.path.dirname(__file__)
@@ -33,7 +35,7 @@ def create_app(ini_file=DEFAULT_INI_FILE):
         app.register_blueprint(bp)
         bp.app = app
 
-    app.db = ServiceBook(app.config['common']['service_book'])
+    app.db = Client(app.config['common']['service_book'])
     app.register_error_handler(401, unauthorized_view)
     nav.init_app(app)
 

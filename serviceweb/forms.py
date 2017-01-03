@@ -1,7 +1,7 @@
 from wtforms import (Form, BooleanField, StringField, TextField,
                      SelectField)
 from flask import g
-from serviceweb.db import fullname
+from serviceweb.util import fullname
 
 
 def get_users():

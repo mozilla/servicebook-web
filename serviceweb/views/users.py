@@ -4,7 +4,7 @@ from flask import request, redirect, g
 
 from serviceweb.auth import only_for_editors
 from serviceweb.forms import UserForm
-from serviceweb.db import fullname
+from serviceweb.util import fullname
 
 
 users_bp = Blueprint('users', __name__)

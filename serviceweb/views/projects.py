@@ -7,7 +7,7 @@ from flask import request, redirect, g
 
 from serviceweb.auth import only_for_editors
 from serviceweb.forms import ProjectForm, DeploymentForm
-from serviceweb.db import objdict
+from restjson.client import objdict
 
 
 projects = Blueprint('projects', __name__)
