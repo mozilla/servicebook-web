@@ -6,5 +6,5 @@ flask-nav
 Flask-WTF
 PyYAML
 rauth
--e git+https://github.com/tarekziade/smwogger#egg=smwogger
 -e git+https://github.com/tarekziade/restjson.git#egg=restjson
+-e git+https://github.com/tarekziade/smwogger#egg=smwogger

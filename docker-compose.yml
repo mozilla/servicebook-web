@@ -9,6 +9,6 @@ services:
         volumes:
         - .:/code    
     servicebook:
-        image: servicebook
+        image: servicebook/dev
         ports:
         - "5001:5001"
