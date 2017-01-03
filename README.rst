@@ -8,27 +8,29 @@ documentation and everything we have about them.
 Running locally
 ---------------
 
+
+To run the Service Book, edit **serviceweb.ini** so
+the **service_book** variable in the common section points
+to the running Service Book, then:
+
 Create a local virtualenv, install requirements, initialize the DB
 then run the service::
 
     $ virtualenv .
     $ bin/pip install -r requirements.txt
     $ bin/python setup.py develop
-    $ bin/servicebook-import
-    $ bin/servicebook
-
-
+    $ bin/serviceweb
 
 
 Running with Docker
 -------------------
 
-You can run the app using the provided Dockerfile, by building the docker
-image, then running it. It will bind the app to your 5000 port::
+Make sure you have a **servicebook/dev** Docker image built in your Docker.
+Then Edit **serviceweb.ini** so the **service_book** variable is **http://servicebook:5001/api/**
 
-    $ make docker-build
-    $ make docker-run
+Last, use docker-compose::
 
+    $ docker-compose up
 
 
 
