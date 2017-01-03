@@ -9,8 +9,7 @@ RUN \
 
 RUN \
     pip install -e /code ; \
-    pip install -e git+https://github.com/tarekziade/smwogger#egg=smwogger
 
 
 EXPOSE 5000
-CMD rm -f /tmp/qa_projects.db; cd code; servicebook-import; servicebook
+CMD serviceweb
