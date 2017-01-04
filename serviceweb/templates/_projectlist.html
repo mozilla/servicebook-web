@@ -38,15 +38,16 @@
           {% endif %}
         </td>
         <td>
-         <div class="progress">
-           <div class="progress-bar" role="progressbar"
-                                     aria-valuenow="{{project|completion}}"
-                                     aria-valuemin="0"
-                                     aria-valuemax="100"
-                                     style="width:{{project|completion}}%">
-             {{project|completion}}%
-            </div>
-         </div>
+       <div class="clearfix">
+        <div class="c100 p{{project|completion}} small">
+          <span>{{project|completion}}%</span>
+          <div class="slice">
+            <div class="bar"></div>
+            <div class="fill"></div>
+          </div>
+        </div> 
+       </div>
+
         </td>
       </tr>
     {% endfor %}

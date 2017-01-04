@@ -9,4 +9,10 @@ def fullname(user):
 
 def testing_completion(project):
     # XXX projects.tests theneck if completed and 8 test
-    return 75
+    num = len(project.tests)
+    if num == 0:
+        return 0
+    done = len([test for test in project.tests if test['operational']])
+    if done == 0:
+        return 0
+    return int(float(done) / float(num) * 100)

@@ -2,6 +2,28 @@
 {% set title = project.name %}
 {% set subtitle = project.description %}
 
+{% block scripts %}
+{{super()}}
+
+<script src="//gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+<script>
+    {% for test in project.tests %} 
+
+    $("#toggle-test-{{test.id}}").change(function() {
+      if ($(this).prop('checked')) {
+        $('#test-link-{{test.id}}').addClass("list-group-item-success");
+        $('#test-link-{{test.id}}').removeClass("list-group-item-danger");
+      } else {
+        $('#test-link-{{test.id}}').addClass("list-group-item-danger");
+        $('#test-link-{{test.id}}').removeClass("list-group-item-success");
+      }
+    });
+    {% endfor %}
+</script>
+{% endblock scripts %}
+
+
 {% block page %}
 
 <div class="row">
@@ -10,20 +32,23 @@
      <h2>Tests</h2>
 
      <div class="list-group">
-       <div class="clearfix">
-        <div class="c100 p{{project|completion}}">
-          <span>{{project|completion}}%</span>
-          <div class="slice">
-            <div class="bar"></div>
-            <div class="fill"></div>
-          </div>
-        </div> 
-       </div>
-        {% for link in project.test %}
-        <a class="list-group-item" href="{{link.link}}">
-           <strong>{{link.name}}</strong>
-           {% if link.description %}<em>{{link.description}}</em>{% endif %}
-        </a>
+        {% for test in project.tests %}
+          <div data-toggle="collapse" data-target="#edit-test-{{test.id}}" id="test-link-{{test.id}}" class="list-group-item {% if test.operational %}list-group-item-success{% else %}list-group-item-danger{% endif %}" href="{{test.link}}">
+           <strong>{{test.name}}</strong>
+        </div>
+        <div id="edit-test-{{test.id}}" class="collapse" style="margin: 10px">
+            <form>
+              <div class="form-group"> 
+                <label for="link">Link</label>
+                <input id="link" type="text" class="form-control" value="{{test.link}}"/>
+              </div>
+              <div class="form-group">
+                <label for="toggle-test-{{test.id}}">Status</label>
+                <input {% if test.operational %}checked{%endif %} id="toggle-test-{{test.id}}" data-toggle="toggle" data-on="OK" data-off="KO" type="checkbox">
+              </div>
+           </form>
+        </div>
+
         {% endfor %}
      </div>
 
@@ -115,9 +140,7 @@
   {% endfor %}
   <div><a href="/projects/{{project.id}}/deployments" role="button" class="btn btn-default btn-lg">
   <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add a Deployment
-  
  </a>
   </div>
 </div>
-
 {% endblock %}
