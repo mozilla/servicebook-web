@@ -21,9 +21,13 @@ def user_view(user_id):
         mozillian = {}
 
     # should be an attribute in the user table
-    filters = [{'or': [{'name': 'primary_id', 'op': 'eq', 'val': user_id},
-                       {'name': 'secondary_id', 'op': 'eq', 'val': user_id}]}]
+    filters = []
+    for role in ('qa_primary_id', 'qa_secondary_id', 'op_primary_id',
+                 'op_secondary_id', 'dev_primary_id', 'dev_secondary_id'):
+        filters.append({'name': role, 'op': 'eq', 'val': user_id})
 
+
+    filters = [{'or': filters}]
     projects = g.db.get_entries('project', filters)['objects']
     backlink = '/'
     return render_template('user.html', projects=projects, user=user,

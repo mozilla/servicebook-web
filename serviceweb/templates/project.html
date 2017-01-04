@@ -7,27 +7,28 @@
 <div class="row">
  <div class="col-md-6">
 
-     <h2>Tests & Links</h2>
-     {% if project.links == [] %}
-     <strong>No links here ? Come on, this is so sad.</strong>
-     {% endif %}
+     <h2>Tests</h2>
 
      <div class="list-group">
-     {% for link in project.links %}
-       <a class="list-group-item" href="{{link.link}}">
+       <div class="clearfix">
+        <div class="c100 p{{project|completion}}">
+          <span>{{project|completion}}%</span>
+          <div class="slice">
+            <div class="bar"></div>
+            <div class="fill"></div>
+          </div>
+        </div> 
+       </div>
+        {% for link in project.test %}
+        <a class="list-group-item" href="{{link.link}}">
            <strong>{{link.name}}</strong>
            {% if link.description %}<em>{{link.description}}</em>{% endif %}
         </a>
-     {% endfor %}
+        {% endfor %}
      </div>
 
-
-    <h2>Bugs</h2>
-     {% if bugs == [] %}
-     <strong>Zaroo bugs. WOW.</strong>
-     {% endif %}
-
-
+    {% if bugs != [] %}
+    <h2>Bugzilla</h2>
     <ul class="list-unstyled">
         {% for bug in bugs %}
         <li><span class="badge">{{bug.status}}</span>
@@ -35,12 +36,32 @@
                {{bug.id}} {{bug.summary}}</a></li>
         {% endfor %}
     </ul>
+    {% endif %}
 
   </div>
   <div class="col-md-6">
-   <h2>Info
-   </h2>
+   <h2>Metadata</h2>
   <ul class="list-group">
+      <li class="list-group-item"><em>Home page</em> <a href="{{project.homepage}}">{{project.homepage}}</a></li>
+      <li class="list-group-item"><em>Repository</em> <a href="{{project.homepage}}">{{project.repository}}</a></li>
+     {% for role in ('qa_primary', 'qa_secondary', 'op_primary', 'op_secondary', 'dev_primary', 'dev_secondary') %}
+       {% if role in project %}
+       <li class="list-group-item">
+         <em>{{role|translate}}</em>
+         <a href="/users/{{project[role].id}}">
+         <strong>{{project[role]|fullname}}</strong></a>
+       </li>
+       {% endif %}
+     {% endfor %}
+
+     <li class="list-group-item"><em>QA Group</em> <a href="/groups/{{project.qa_group.name}}"><strong>{{project.qa_group.name}}</strong></a></li>
+     <li class="list-group-item"><em>IRC</em>
+         {% if project.irc %}
+         <strong>{{project.irc}}</strong>
+         {% else %}
+         <strong>Too many IRC channels already.</strong>
+         {% endif %}
+     </li>
      {% if project_info %}
      <li class="list-group-item">
        <span class="label label-success label-as-badge">{...}</span>
@@ -55,29 +76,16 @@
        <em>Homepage</em>
        <a href="{{project_info['x-mozilla-services']['homepage']}}">{{project_info['x-mozilla-services']['homepage']}}</a></li>
      {% endif %}
-     <li class="list-group-item"><em>QA Primary</em> <strong>{{project.primary|fullname}}</strong></li>
-	 <li class="list-group-item"><em>QA Secondary</em> <strong>{{project.secondary|fullname}}</strong></li>
-     <li class="list-group-item"><em>IRC</em>
-         {% if project.irc %}
-         <strong>{{project.irc}}</strong>
-         {% else %}
-         <strong>Too many IRC channels already.</strong>
-         {% endif %}
-     </li>
-     <li class="list-group-item"><em>Group</em> <strong>{{project.group.name}}</strong></li>
+
   </ul>
   </div>
   </div>
 
   <h2>Deployments</h2>
-     {% if project.deployments == [] %}
-     <strong>No deployments means no worries, right ?</strong>
-     {% endif %}
-
 
   {% for deployment in project.deployments %}
-<div class="panel panel-primary">
-<div class="panel-heading">
+  <div class="panel panel-primary">
+  <div class="panel-heading">
   <h2 class="panel-title">{{deployment.name}}  <span class="badge">v0.3.0</span>
     <span class="badge"><a href="/projects/{{project.id}}/deployments/{{deployment.id}}/edit">Edit</a></span>
     <span class="badge"><a href="/projects/{{project.id}}/deployments/{{deployment.id}}/delete">Remove</a></span>
@@ -105,9 +113,11 @@
 </div>
 
   {% endfor %}
-  <a href="/projects/{{project.id}}/deployments" role="button" class="btn btn-default btn-lg">
+  <div><a href="/projects/{{project.id}}/deployments" role="button" class="btn btn-default btn-lg">
   <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add a Deployment
+  
  </a>
+  </div>
 </div>
 
 {% endblock %}

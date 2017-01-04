@@ -9,7 +9,9 @@ def get_users():
     # XXX this call should be cached
     filters = [{'name': 'mozqa', 'op': 'eq', 'val': True}]
     entries = g.db.get_entries('user', filters=filters, order_by='firstname')
-    return [(entry.id, fullname(entry)) for entry in entries['objects']]
+    res = [(entry.id, fullname(entry)) for entry in entries['objects']]
+    res.insert(0, (-1, 'N/A'))
+    return res
 
 
 def get_groups():
@@ -43,12 +45,20 @@ class ProjectForm(Form):
     name = StringField()
     description = TextField()
     irc = StringField()
+    homepage = StringField()
+    repository = StringField()
     bz_product = StringField()
     bz_component = StringField()
-    primary_id = DynamicSelectField('primary', coerce=int, choices=get_users)
-    secondary_id = DynamicSelectField('secondary', coerce=int,
+    qa_primary_id = DynamicSelectField('qa_primary', coerce=int, choices=get_users)
+    qa_secondary_id = DynamicSelectField('qa_secondary', coerce=int,
                                       choices=get_users)
-    group_name = DynamicSelectField('group', choices=get_groups)
+    qa_group_name = DynamicSelectField('qa_group', choices=get_groups)
+    op_primary_id = DynamicSelectField('op_primary', coerce=int, choices=get_users)
+    op_secondary_id = DynamicSelectField('op_secondary', coerce=int,
+                                      choices=get_users)
+    dev_primary_id = DynamicSelectField('dev_primary', coerce=int, choices=get_users)
+    dev_secondary_id = DynamicSelectField('dev_secondary', coerce=int,
+                                      choices=get_users)
 
 
 class DeploymentForm(Form):

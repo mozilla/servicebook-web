@@ -13,6 +13,7 @@ from serviceweb.mozillians import Mozillians
 from serviceweb.translations import APP_TRANSLATIONS
 
 from serviceweb.util import fullname as _fullname
+from serviceweb.util import testing_completion
 from restjson.client import Client
 
 
@@ -57,6 +58,10 @@ def create_app(ini_file=DEFAULT_INI_FILE):
     @app.template_filter('capitalize')
     def capitalize_string(s):
         return s[0].capitalize() + s[1:]
+
+    @app.template_filter('completion')
+    def completion(s):
+        return testing_completion(s)
 
     @app.template_filter('fullname')
     def fullname(s):
