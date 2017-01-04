@@ -26,7 +26,6 @@ def user_view(user_id):
                  'op_secondary_id', 'dev_primary_id', 'dev_secondary_id'):
         filters.append({'name': role, 'op': 'eq', 'val': user_id})
 
-
     filters = [{'or': filters}]
     projects = g.db.get_entries('project', filters)['objects']
     backlink = '/'

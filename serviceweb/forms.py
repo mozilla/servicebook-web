@@ -49,16 +49,19 @@ class ProjectForm(Form):
     repository = StringField()
     bz_product = StringField()
     bz_component = StringField()
-    qa_primary_id = DynamicSelectField('qa_primary', coerce=int, choices=get_users)
+    qa_primary_id = DynamicSelectField('qa_primary', coerce=int,
+                                       choices=get_users)
     qa_secondary_id = DynamicSelectField('qa_secondary', coerce=int,
-                                      choices=get_users)
+                                         choices=get_users)
     qa_group_name = DynamicSelectField('qa_group', choices=get_groups)
-    op_primary_id = DynamicSelectField('op_primary', coerce=int, choices=get_users)
+    op_primary_id = DynamicSelectField('op_primary', coerce=int,
+                                       choices=get_users)
     op_secondary_id = DynamicSelectField('op_secondary', coerce=int,
-                                      choices=get_users)
-    dev_primary_id = DynamicSelectField('dev_primary', coerce=int, choices=get_users)
+                                         choices=get_users)
+    dev_primary_id = DynamicSelectField('dev_primary', coerce=int,
+                                        choices=get_users)
     dev_secondary_id = DynamicSelectField('dev_secondary', coerce=int,
-                                      choices=get_users)
+                                          choices=get_users)
 
 
 class DeploymentForm(Form):

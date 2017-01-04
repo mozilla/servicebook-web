@@ -39,11 +39,5 @@ class FrontEndTest(BaseTest):
         self.assertTrue('ABSearch' in karl)
 
     def test_browsing_group(self):
-        r = self.app.get('/')
-
-        for index, link in enumerate(r.html.findAll('a')):
-            if 'Customization' in link.text:
-                break
-
-        custom = r.click(index=index)
+        custom = self.app.get('/groups/Customization')
         self.assertTrue('Telemetry' in custom)

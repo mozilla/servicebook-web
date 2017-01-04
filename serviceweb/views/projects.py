@@ -91,7 +91,7 @@ def project(project_id):
             project_info = yaml.load(res.content)['info']
 
     backlink = '/'
-    edit = '/projects/%d/edit' % project['id']
+    edit = '/projects/%d/edit' % project_id
     return render_template('project.html', project=project, bugs=bugs,
                            edit=edit,
                            project_info=project_info, backlink=backlink)
