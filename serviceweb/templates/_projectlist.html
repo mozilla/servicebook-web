@@ -3,39 +3,15 @@
     <thead>
       <tr>
         <th>Project</th>
-        <th>QA Team</th>
-        <th>Ops Team</th>
-        <th>Dev Team</th>
         <th>Testing Completion</th>
+        <th>People Involved</th>
       </tr>
     </thead>
     <tbody>
     {% for project in projects %}
       <tr>
-        <td><a href="/projects/{{project.id}}">{{project.name}}</a></td>
-        <td>
-          {% if project.qa_primary_id %}
-            <a href="/users/{{project.qa_primary_id}}">{{project.qa_primary|fullname}}</a>
-          {% endif %}
-          {% if project.qa_secondary_id %}
-            + <a href="/users/{{project.qa_secondary_id}}">{{project.qa_secondary|fullname}}</a>
-          {% endif %}
-        </td>
-        <td>
-          {% if project.ops_primary_id %}
-            <a href="/users/{{project.ops_primary_id}}">{{project.ops_primary|fullname}}</a>
-          {% endif %}
-          {% if project.ops_secondary_id %}
-            + <a href="/users/{{project.ops_secondary_id}}">{{project.ops_secondary|fullname}}</a>
-          {% endif %}
-        </td>
-        <td>
-          {% if project.dev_primary_id %}
-            <a href="/users/{{project.dev_primary_id}}">{{project.dev_primary|fullname}}</a>
-          {% endif %}
-          {% if project.dev_secondary_id %}
-            + <a href="/users/{{project.dev_secondary_id}}">{{project.dev_secondary|fullname}}</a>
-          {% endif %}
+        <td><a class="h2" href="/projects/{{project.id}}">{{project.name}}</a>
+          <p>{{project.description}}</a>
         </td>
         <td>
        <div class="clearfix">
@@ -48,6 +24,40 @@
         </div> 
        </div>
 
+        </td>
+
+        <td>
+          {% if project.qa_primary_id %}
+            <a
+              href="/users/{{project.qa_primary_id}}">{{project.qa_primary|fullname}}
+            (QA)</a>
+          {% endif %}
+          {% if project.qa_secondary_id %}
+            <a
+              href="/users/{{project.qa_secondary_id}}">{{project.qa_secondary|fullname}}
+            (QA)</a>
+          {% endif %}
+          {% if project.ops_primary_id %}
+            <a
+              href="/users/{{project.ops_primary_id}}">{{project.ops_primary|fullname}}
+            (OPS)</a>
+          {% endif %}
+          {% if project.ops_secondary_id %}
+             <a
+              href="/users/{{project.ops_secondary_id}}">{{project.ops_secondary|fullname}}
+            (OPS)</a>
+          {% endif %}
+          {% if project.dev_primary_id %}
+            <a
+              href="/users/{{project.dev_primary_id}}">{{project.dev_primary|fullname}}
+              (Dev)
+            </a>
+          {% endif %}
+          {% if project.dev_secondary_id %}
+            <a href="/users/{{project.dev_secondary_id}}">{{project.dev_secondary|fullname}}
+            (Dev)
+            </a>
+          {% endif %}
         </td>
       </tr>
     {% endfor %}
