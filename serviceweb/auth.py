@@ -17,8 +17,10 @@ def github2dbuser(github_user):
                 'val': github_user['login']}]
     res = g.db.get_entries('user', filters=filters)
 
-    if res['num_results'] > 0:
-        db_user = res['objects'][0]
+    if len(res) == 1:
+        db_user = res[0]
+    elif len(res) > 1:
+        raise ValueError(len(res))
     else:
         # creating an entry
         name = github_user['name'].split(' ', 1)

@@ -27,7 +27,7 @@ def user_view(user_id):
         filters.append({'name': role, 'op': 'eq', 'val': user_id})
 
     filters = [{'or': filters}]
-    projects = g.db.get_entries('project', filters)['objects']
+    projects = g.db.get_entries('project', filters)
     backlink = '/'
     return render_template('user.html', projects=projects, user=user,
                            backlink=backlink, mozillian=mozillian)
@@ -36,7 +36,7 @@ def user_view(user_id):
 @users_bp.route("/users")
 @only_for_editors
 def users_view():
-    users = g.db.get_entries('user')['objects']
+    users = g.db.get_entries('user')
     return render_template('users.html', users=users)
 
 
