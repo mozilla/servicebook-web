@@ -8,21 +8,21 @@ def get_users():
     # only mozqa folks can be primary/secondary/group lead
     # XXX this call should be cached
     filters = [{'name': 'mozqa', 'op': 'eq', 'val': True}]
-    entries = g.db.get_entries('user', filters=filters, order_by='firstname')
-    res = [(entry.id, fullname(entry)) for entry in entries['objects']]
+    entries = g.db.get_entries('user', filters=filters, sort='firstname')
+    res = [(entry.id, fullname(entry)) for entry in entries]
     res.insert(0, (-1, 'N/A'))
     return res
 
 
 def get_groups():
     # XXX this call should be cached
-    entries = g.db.get_entries('group', order_by='name')['objects']
+    entries = g.db.get_entries('group', sort='name')
     return [(entry.name, entry.name) for entry in entries]
 
 
 def get_projects():
     # XXX this call should be cached
-    projects = g.db.get_entries('project', order_by='name')['objects']
+    projects = g.db.get_entries('project', sort='name')
     return [(entry.id, entry) for entry in projects]
 
 

@@ -20,7 +20,8 @@ def github2dbuser(github_user):
     if len(res) == 1:
         db_user = res[0]
     elif len(res) > 1:
-        raise ValueError(len(res))
+
+        raise ValueError(res)
     else:
         # creating an entry
         name = github_user['name'].split(' ', 1)

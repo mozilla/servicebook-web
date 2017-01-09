@@ -26,10 +26,16 @@ def edit_project(project_id):
 
     if request.method == 'POST' and form.validate():
         form.populate_obj(project)
+
+        # not updating relatison for now
+        for field in list(project.keys()):
+            if isinstance(project[field], (dict, list)):
+                del project[field]
+
         g.db.update_entry('project', project)
         return redirect('/projects/%d' % project_id)
 
-    action = 'Edit %r' % project.name
+    action = 'Edit %r' % project['name']
     backlink = '/projects/%d' % project_id
     return render_template("edit.html", form=form, action=action,
                            backlink=backlink,

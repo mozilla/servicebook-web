@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% set title = 'Resource Coverage' %}
+{% set subtitle = 'Tests completion & other metrics' %}
+
+{% block page %}
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Project</th>
+        <th>Testing Completion</th>
+        <th>People Involved</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for project in projects %}
+      <tr>
+        <td><a class="h2" href="/projects/{{project.id}}">{{project.name}}</a>
+          <p>{{project.description}}</a>
+        </td>
+        <td>
+       <div class="clearfix">
+        <div class="c100 p{{project|completion}} small">
+          <span>{{project|completion}}%</span>
+          <div class="slice">
+            <div class="bar"></div>
+            <div class="fill"></div>
+          </div>
+        </div> 
+       </div>
+
+        </td>
+
+        <td>
+          {% if project.qa_primary_id %}
+            <a
+              href="/users/{{project.qa_primary_id}}">{{project.qa_primary|fullname}}
+            (QA)</a>
+          {% endif %}
+          {% if project.qa_secondary_id %}
+            <a
+              href="/users/{{project.qa_secondary_id}}">{{project.qa_secondary|fullname}}
+            (QA)</a>
+          {% endif %}
+          {% if project.ops_primary_id %}
+            <a
+              href="/users/{{project.ops_primary_id}}">{{project.ops_primary|fullname}}
+            (OPS)</a>
+          {% endif %}
+          {% if project.ops_secondary_id %}
+             <a
+              href="/users/{{project.ops_secondary_id}}">{{project.ops_secondary|fullname}}
+            (OPS)</a>
+          {% endif %}
+          {% if project.dev_primary_id %}
+            <a
+              href="/users/{{project.dev_primary_id}}">{{project.dev_primary|fullname}}
+              (Dev)
+            </a>
+          {% endif %}
+          {% if project.dev_secondary_id %}
+            <a href="/users/{{project.dev_secondary_id}}">{{project.dev_secondary|fullname}}
+            (Dev)
+            </a>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+ </div>
+
+
+{% endblock %}

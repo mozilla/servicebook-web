@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% set title = 'Projects Info' %}
+{% set subtitle = "Who, Where, What, etc." %}
+
+{% block page %}
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Project</th>
+        <th>People Involved</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for project in projects %}
+      <tr>
+        <td><a href="/projects/{{project.id}}">{{project.name}}</a></td>
+        <td>
+          {% if project.qa_primary_id %}
+            <a
+              href="/users/{{project.qa_primary_id}}">{{project.qa_primary|fullname}}
+            (QA)</a>
+          {% endif %}
+          {% if project.qa_secondary_id %}
+            <a
+              href="/users/{{project.qa_secondary_id}}">{{project.qa_secondary|fullname}}
+            (QA)</a>
+          {% endif %}
+          {% if project.ops_primary_id %}
+            <a
+              href="/users/{{project.ops_primary_id}}">{{project.ops_primary|fullname}}
+            (OPS)</a>
+          {% endif %}
+          {% if project.ops_secondary_id %}
+             <a
+              href="/users/{{project.ops_secondary_id}}">{{project.ops_secondary|fullname}}
+            (OPS)</a>
+          {% endif %}
+          {% if project.dev_primary_id %}
+            <a
+              href="/users/{{project.dev_primary_id}}">{{project.dev_primary|fullname}}
+              (Dev)
+            </a>
+          {% endif %}
+          {% if project.dev_secondary_id %}
+            <a href="/users/{{project.dev_secondary_id}}">{{project.dev_secondary|fullname}}
+            (Dev)
+            </a>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

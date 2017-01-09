@@ -29,7 +29,7 @@ class FrontEndTest(BaseTest):
             self.assertTrue('Karl' in project_absearch)
 
     def test_browsing_user(self):
-        r = self.app.get('/')
+        r = self.app.get('/info')
 
         for index, link in enumerate(r.html.findAll('a')):
             if 'Karl' in link.text:
