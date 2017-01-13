@@ -19,7 +19,7 @@
 {% endif %}
 
 <div class="row">
- <div class="col-md-6">
+ <div class="col-md-5">
      <h2>Tests</h2>
      <div class="list-group">
         {% for test in project.tests %}
@@ -29,6 +29,24 @@
         </div>
         {% endfor %}
      </div>
+ </div>
+ <div class="col-md-2">
+    {% if jenkins_builds %}
+    <h2><img src="/static/jenkins.png"/>&nbsp;Jenkins</h2>
+    <ul class="list-unstyled">
+        {% for build in jenkins_builds %}
+
+        <li>
+            {% if build['result'] == 'SUCCESS' %}
+              <img src="/static/jenkins_success.png"/>
+            {% else %}
+              <img src="/static/jenkins_failure.png"/>
+            {% endif %}
+            <a href="{{build['url']}}">{{build['fullDisplayName']}}</a>
+       </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
 
     {% if bugs != [] %}
     <h2>Bugzilla</h2>
@@ -42,15 +60,15 @@
     {% endif %}
 
   </div>
-  <div class="col-md-6">
-   <h2>Metadata</h2>
+  <div class="col-md-5">
+   <h2>Project Info</h2>
   <ul class="list-group">
       <li class="list-group-item"><em>Home page</em> <a href="{{project.homepage}}">{{project.homepage}}</a></li>
       {% for repo in project.repositories %}
-      <li class="list-group-item"><em>Repository #{{loop.index}}</em> 
+      <li class="list-group-item"><em>Repository #{{loop.index}}</em>
         <a href="{{repo.url}}">{{repo.url}}</a>
       </li>
-      {% endfor %} 
+      {% endfor %}
      {% for role in ('qa_primary', 'qa_secondary', 'op_primary', 'op_secondary', 'dev_primary', 'dev_secondary') %}
        {% if role in project %}
        <li class="list-group-item">

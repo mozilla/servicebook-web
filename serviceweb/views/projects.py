@@ -1,3 +1,4 @@
+import random
 import yaml
 import requests
 
@@ -57,9 +58,23 @@ def add_project():
                            form_action="/projects/")
 
 
+def get_last_builds(job_name):
+    # just random samples for now
+    url = 'https://webqa-ci.mozilla.com/job/mozillians.prod/%d/'
+    return [{'url': url % (i + 100),
+             'fullDisplayName': 'mozillians.prod #%d' % (i + 100),
+             'result': random.choice(['SUCCESS', 'FAILURE'])}
+            for i in range(10)]
+
+
 @projects.route("/projects/<int:project_id>")
 def project(project_id):
     project = g.db.get_entry('project', project_id)
+
+    # scraping jenkins info
+    #for job in project['jenkins_jobs']:
+    #    builds.extend(get_last_builds(job['id']))
+    builds = get_last_builds('blah')
 
     # scraping bugzilla info
     if project['bz_product']:
@@ -99,7 +114,7 @@ def project(project_id):
     backlink = '/'
     edit = '/projects/%d/edit' % project_id
     return render_template('project.html', project=project, bugs=bugs,
-                           edit=edit,
+                           edit=edit, jenkins_builds=builds,
                            project_info=project_info, backlink=backlink)
 
 
