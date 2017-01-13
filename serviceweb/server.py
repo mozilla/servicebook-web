@@ -3,7 +3,7 @@ import logging.config
 
 from flask import Flask, g
 from flask_bootstrap import Bootstrap
-from flask.ext.iniconfig import INIConfig
+from flask_iniconfig import INIConfig
 
 from serviceweb.nav import nav
 from serviceweb.views import blueprints

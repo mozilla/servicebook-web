@@ -6,7 +6,7 @@ import re
 
 import yaml
 import requests_mock
-from flask.ext.webtest import TestApp
+from flask_webtest import TestApp
 from serviceweb.server import create_app
 
 
