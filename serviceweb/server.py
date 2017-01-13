@@ -4,6 +4,7 @@ import logging.config
 from flask import Flask, g
 from flask_bootstrap import Bootstrap
 from flask_iniconfig import INIConfig
+from flaskext.markdown import Markdown
 
 from serviceweb.nav import nav
 from serviceweb.views import blueprints
@@ -31,6 +32,7 @@ def create_app(ini_file=DEFAULT_INI_FILE):
     Bootstrap(app)
     GithubAuth(app)
     Mozillians(app)
+    Markdown(app)
 
     for bp in blueprints:
         app.register_blueprint(bp)

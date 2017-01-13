@@ -27,6 +27,10 @@ def get_projects():
     return [(entry.id, entry) for entry in projects]
 
 
+def display_depl(entry):
+    return '%(name)s deployed at %(endpoint)s' % entry
+
+
 def display_repo(entry):
     if entry['name'] is not None:
         return '%(name)s -- %(url)s' % entry
@@ -48,13 +52,15 @@ def DynField(name, coerce=int, choices=get_users):
 class ProjectForm(Form):
     name = fields.StringField()
     homepage = fields.StringField()
-    description = LargeTextAreaField()
+    description = fields.TextAreaField()
+    long_description = LargeTextAreaField(description='You can use Markdown.')
     repositories = JsonListField('repositories',
                                  checkbox_label=display_repo)
     tags = JsonListField('tags')
     languages = JsonListField('languages', checkbox_label=display_lang)
-    tests = JsonListField('tests')
+    tests = JsonListField('tests', checkbox_label=display_repo)
     jenkins_jobs = JsonListField('jenkins_jobs')
+    deployments = JsonListField('deployments', checkbox_label=display_depl)
     irc = fields.StringField()
     bz_product = fields.StringField()
     bz_component = fields.StringField()

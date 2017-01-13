@@ -2,53 +2,31 @@
 {% set title = project.name %}
 {% set subtitle = project.description %}
 
-{% block scripts %}
-{{super()}}
-
-<script src="//gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
-
-<script>
-    {% for test in project.tests %} 
-
-    $("#toggle-test-{{test.id}}").change(function() {
-      if ($(this).prop('checked')) {
-        $('#test-link-{{test.id}}').addClass("list-group-item-success");
-        $('#test-link-{{test.id}}').removeClass("list-group-item-danger");
-      } else {
-        $('#test-link-{{test.id}}').addClass("list-group-item-danger");
-        $('#test-link-{{test.id}}').removeClass("list-group-item-success");
-      }
-    });
-    {% endfor %}
-</script>
-{% endblock scripts %}
-
 
 {% block page %}
 
+<h3>
+{% for tag in project.tags %}
+<span class="label label-success">{{tag.name}}</span>
+{% endfor %}
+{% for lang in project.languages %}
+<span class="label label-info">{{lang.name}}{% if lang.version %}&nbsp;{{lang.version}}{% endif %}</span>
+{% endfor %}
+</h3>
+
+{% if project.long_description %}
+{{project.long_description|markdown}}
+{% endif %}
+
 <div class="row">
  <div class="col-md-6">
-
      <h2>Tests</h2>
-
      <div class="list-group">
         {% for test in project.tests %}
-          <div data-toggle="collapse" data-target="#edit-test-{{test.id}}" id="test-link-{{test.id}}" class="list-group-item {% if test.operational %}list-group-item-success{% else %}list-group-item-danger{% endif %}" href="{{test.link}}">
+          <div class="list-group-item {% if test.operational %}list-group-item-success{% else %}list-group-item-danger{% endif %}">
            <strong>{{test.name}}</strong>
+           <a href="{{test.url}}">{{test.url}}</a>
         </div>
-        <div id="edit-test-{{test.id}}" class="collapse" style="margin: 10px">
-            <form>
-              <div class="form-group"> 
-                <label for="link">Link</label>
-                <input id="link" type="text" class="form-control" value="{{test.link}}"/>
-              </div>
-              <div class="form-group">
-                <label for="toggle-test-{{test.id}}">Status</label>
-                <input {% if test.operational %}checked{%endif %} id="toggle-test-{{test.id}}" data-toggle="toggle" data-on="OK" data-off="KO" type="checkbox">
-              </div>
-           </form>
-        </div>
-
         {% endfor %}
      </div>
 
@@ -68,7 +46,11 @@
    <h2>Metadata</h2>
   <ul class="list-group">
       <li class="list-group-item"><em>Home page</em> <a href="{{project.homepage}}">{{project.homepage}}</a></li>
-      <li class="list-group-item"><em>Repository</em> <a href="{{project.homepage}}">{{project.repository}}</a></li>
+      {% for repo in project.repositories %}
+      <li class="list-group-item"><em>Repository #{{loop.index}}</em> 
+        <a href="{{repo.url}}">{{repo.url}}</a>
+      </li>
+      {% endfor %} 
      {% for role in ('qa_primary', 'qa_secondary', 'op_primary', 'op_secondary', 'dev_primary', 'dev_secondary') %}
        {% if role in project %}
        <li class="list-group-item">

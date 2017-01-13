@@ -7,15 +7,18 @@
    {% endif %}
 
    {% if field.type != 'HiddenField' %}
-     <label for="{{ field.id }}">
-                 {{field.label.text|translate|capitalize}}
-     </label>
+     <label for="{{field.id }}">{{field.label.text|translate|capitalize}}</label>
    {% endif %}
 
-     {{ field(class_='form-control')|safe }}
+   {% if field.description %}
+   <span class="help-inline">{{field.description}}</span>
+   {% endif %}
+
+   {{ field(class_='form-control')|safe}}
+
    {% if field.errors %}
-      {% for e in field.errors %}
-          <p class="help-block">{{ e }}</p>
+      {% for error in field.errors %}
+          <p class="help-block">{{error}}</p>
       {% endfor %}
    {% endif %}
    </div>

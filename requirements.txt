@@ -2,6 +2,7 @@ requests
 flask
 flask-bootstrap
 flask-iniconfig
+flask-markdown
 flask-nav
 Flask-WTF
 PyYAML
