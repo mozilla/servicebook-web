@@ -11,6 +11,7 @@ edit = Blueprint('edit', __name__)
 @edit.route("/<table_name>/<int:entry_id>/edit", methods=['GET', 'POST'])
 @only_for_editors
 def edit_table(table_name, entry_id):
+    inline = request.args.get('inline')
     entry = g.db.get_entry(table_name, entry_id)
     form = get_form(table_name)(request.form, entry)
 
@@ -27,6 +28,10 @@ def edit_table(table_name, entry_id):
 
     action = 'Edit %r' % form.label(entry)
     backlink = '/%s/%d' % (table_name, entry_id)
-    return render_template("edit.html", form=form, action=action,
-                           backlink=backlink,
+    if inline is not None:
+        tmpl = "inline_edit.html"
+    else:
+        tmpl = "edit.html"
+
+    return render_template(tmpl, form=form, action=action, backlink=backlink,
                            form_action='/%s/%d/edit' % (table_name, entry_id))
