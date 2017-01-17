@@ -18,32 +18,32 @@
         <td>
           {% if project.qa_primary_id %}
             <a
-              href="/users/{{project.qa_primary_id}}">{{project.qa_primary|fullname}}
+              href="/user/{{project.qa_primary_id}}">{{project.qa_primary|fullname}}
             (QA)</a>
           {% endif %}
           {% if project.qa_secondary_id %}
             <a
-              href="/users/{{project.qa_secondary_id}}">{{project.qa_secondary|fullname}}
+              href="/user/{{project.qa_secondary_id}}">{{project.qa_secondary|fullname}}
             (QA)</a>
           {% endif %}
           {% if project.ops_primary_id %}
             <a
-              href="/users/{{project.ops_primary_id}}">{{project.ops_primary|fullname}}
+              href="/user/{{project.ops_primary_id}}">{{project.ops_primary|fullname}}
             (OPS)</a>
           {% endif %}
           {% if project.ops_secondary_id %}
              <a
-              href="/users/{{project.ops_secondary_id}}">{{project.ops_secondary|fullname}}
+              href="/user/{{project.ops_secondary_id}}">{{project.ops_secondary|fullname}}
             (OPS)</a>
           {% endif %}
           {% if project.dev_primary_id %}
             <a
-              href="/users/{{project.dev_primary_id}}">{{project.dev_primary|fullname}}
+              href="/user/{{project.dev_primary_id}}">{{project.dev_primary|fullname}}
               (Dev)
             </a>
           {% endif %}
           {% if project.dev_secondary_id %}
-            <a href="/users/{{project.dev_secondary_id}}">{{project.dev_secondary|fullname}}
+            <a href="/user/{{project.dev_secondary_id}}">{{project.dev_secondary|fullname}}
             (Dev)
             </a>
           {% endif %}

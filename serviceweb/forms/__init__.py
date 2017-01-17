@@ -12,6 +12,11 @@ def get_form(name):
     return _FORMS[name]
 
 
+class BaseForm(Form):
+    def label(self, entry):
+        return entry['name']
+
+
 def get_users():
     # only mozqa folks can be primary/secondary/group lead
     # XXX this call should be cached
@@ -56,7 +61,7 @@ def DynField(name, coerce=int, choices=get_users):
     return DynamicSelectField(name, coerce=coerce, choices=choices)
 
 
-class ProjectForm(Form):
+class ProjectForm(BaseForm):
     name = fields.StringField()
     homepage = fields.StringField()
     description = fields.TextAreaField()
@@ -83,7 +88,7 @@ class ProjectForm(Form):
 _FORMS['project'] = ProjectForm
 
 
-class DeploymentForm(Form):
+class DeploymentForm(BaseForm):
     name = fields.StringField()
     endpoint = fields.StringField()
 
@@ -91,13 +96,16 @@ class DeploymentForm(Form):
 _FORMS['deployment'] = DeploymentForm
 
 
-class UserForm(Form):
+class UserForm(BaseForm):
     firstname = fields.StringField()
     lastname = fields.StringField()
     mozqa = fields.BooleanField()
     github = fields.StringField()
     editor = fields.BooleanField()
     email = fields.StringField()
+
+    def label(self, entry):
+        return fullname(entry)
 
 
 _FORMS['user'] = UserForm

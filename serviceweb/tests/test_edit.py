@@ -26,23 +26,23 @@ class EditTest(BaseTest):
 
     def test_edit_user(self):
         with self.logged_in():
-            user = self.app.get('/users/1/edit')
+            user = self.app.get('/user/1/edit')
             form = user.forms[0]
             old_name = form['firstname'].value
             form['firstname'] = 'new name'
             form.submit()
 
             # let's check it changed
-            self.assertTrue(b'New name' in self.app.get('/users/1').body)
+            self.assertTrue(b'New name' in self.app.get('/user/1').body)
 
             # change it back to the old value
-            user = self.app.get('/users/1/edit')
+            user = self.app.get('/user/1/edit')
             form = user.forms[0]
             form['firstname'] = old_name
             form.submit()
 
             # let's control we don't have a dupe
-            users = self.app.get('/users')
+            users = self.app.get('/user')
             tds = users.html.find_all('td')
             self.assertEqual(len([td.text for td in tds
                                   if td.text == old_name]), 1)

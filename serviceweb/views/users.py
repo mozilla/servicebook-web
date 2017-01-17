@@ -1,16 +1,14 @@
 from flask import render_template
 from flask import Blueprint
-from flask import request, redirect, g
+from flask import g
 
 from serviceweb.auth import only_for_editors
-from serviceweb.forms import UserForm
-from serviceweb.util import fullname
 
 
 users_bp = Blueprint('users', __name__)
 
 
-@users_bp.route("/users/<int:user_id>")
+@users_bp.route("/user/<int:user_id>")
 def user_view(user_id):
     user = g.db.get_entry('user', user_id)
     mozillians = users_bp.app.extensions['mozillians']
@@ -33,25 +31,8 @@ def user_view(user_id):
                            backlink=backlink, mozillian=mozillian)
 
 
-@users_bp.route("/users")
+@users_bp.route("/user")
 @only_for_editors
 def users_view():
     users = g.db.get_entries('user')
     return render_template('users.html', users=users)
-
-
-@users_bp.route("/users/<int:user_id>/edit", methods=['GET', 'POST'])
-@only_for_editors
-def edit_user(user_id):
-    user = g.db.get_entry('user', user_id)
-    form = UserForm(request.form, user)
-
-    if request.method == 'POST' and form.validate():
-        form.populate_obj(user)
-        g.db.update_entry('user', user)
-        return redirect('/users')
-
-    action = 'Edit %r' % fullname(user)
-    return render_template("edit.html", form=form, action=action,
-                           form_action='/users/%d/edit' % user['id'],
-                           backlink='/users/%d' % user['id'])

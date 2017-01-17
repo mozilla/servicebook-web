@@ -25,7 +25,7 @@ def edit_table(table_name, entry_id):
         g.db.update_entry(table_name, entry)
         return redirect('/%s/%d' % (table_name, entry_id))
 
-    action = 'Edit %r' % entry['name']
+    action = 'Edit %r' % form.label(entry)
     backlink = '/%s/%d' % (table_name, entry_id)
     return render_template("edit.html", form=form, action=action,
                            backlink=backlink,

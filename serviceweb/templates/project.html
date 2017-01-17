@@ -73,7 +73,7 @@
        {% if role in project %}
        <li class="list-group-item">
          <em>{{role|translate}}</em>
-         <a href="/users/{{project[role].id}}">
+         <a href="/user/{{project[role].id}}">
          <strong>{{project[role]|fullname}}</strong></a>
        </li>
        {% endif %}
