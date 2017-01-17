@@ -5,6 +5,13 @@ from serviceweb.forms.customfields import (DynamicSelectField, JsonListField,
                                            LargeTextAreaField)
 
 
+_FORMS = {}
+
+
+def get_form(name):
+    return _FORMS[name]
+
+
 def get_users():
     # only mozqa folks can be primary/secondary/group lead
     # XXX this call should be cached
@@ -73,9 +80,15 @@ class ProjectForm(Form):
     dev_secondary_id = DynField('dev_secondary')
 
 
+_FORMS['project'] = ProjectForm
+
+
 class DeploymentForm(Form):
     name = fields.StringField()
     endpoint = fields.StringField()
+
+
+_FORMS['deployment'] = DeploymentForm
 
 
 class UserForm(Form):
@@ -85,3 +98,6 @@ class UserForm(Form):
     github = fields.StringField()
     editor = fields.BooleanField()
     email = fields.StringField()
+
+
+_FORMS['user'] = UserForm

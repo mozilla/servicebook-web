@@ -14,7 +14,7 @@
     <tbody>
     {% for project in projects %}
       <tr>
-        <td><a href="/projects/{{project.id}}">{{project.name}}</a></td>
+        <td><a href="/project/{{project.id}}">{{project.name}}</a></td>
         <td>
           {% if project.qa_primary_id %}
             <a

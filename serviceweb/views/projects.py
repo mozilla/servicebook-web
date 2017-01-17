@@ -19,31 +19,7 @@ _BUGZILLA = ('https://bugzilla.mozilla.org/rest/bug?' + _STATUSES +
              '&product=%s&component=%s&limit=10')
 
 
-@projects.route("/projects/<int:project_id>/edit", methods=['GET', 'POST'])
-@only_for_editors
-def edit_project(project_id):
-    project = g.db.get_entry('project', project_id)
-    form = ProjectForm(request.form, project)
-
-    if request.method == 'POST' and form.validate():
-        form.populate_obj(project)
-
-        # not updating relatison for now
-        for field in list(project.keys()):
-            if isinstance(project[field], (dict, list)):
-                del project[field]
-
-        g.db.update_entry('project', project)
-        return redirect('/projects/%d' % project_id)
-
-    action = 'Edit %r' % project['name']
-    backlink = '/projects/%d' % project_id
-    return render_template("edit.html", form=form, action=action,
-                           backlink=backlink,
-                           form_action='/projects/%d/edit' % project_id)
-
-
-@projects.route("/projects/", methods=['GET', 'POST'])
+@projects.route("/project/", methods=['GET', 'POST'])
 @only_for_editors
 def add_project():
     form = ProjectForm(request.form)
@@ -51,11 +27,11 @@ def add_project():
         project = objdict()
         form.populate_obj(project)
         project_id = g.db.create_entry('project', project)['id']
-        return redirect('/projects/%d' % project_id)
+        return redirect('/project/%d' % project_id)
 
     action = 'Add a new project'
     return render_template("edit.html", form=form, action=action,
-                           form_action="/projects/")
+                           form_action="/project/")
 
 
 def get_last_builds(job_name):
@@ -67,12 +43,12 @@ def get_last_builds(job_name):
             for i in range(10)]
 
 
-@projects.route("/projects/<int:project_id>")
+@projects.route("/project/<int:project_id>")
 def project(project_id):
     project = g.db.get_entry('project', project_id)
 
     # scraping jenkins info
-    #for job in project['jenkins_jobs']:
+    # for job in project['jenkins_jobs']:
     #    builds.extend(get_last_builds(job['id']))
     builds = get_last_builds('blah')
 
@@ -112,13 +88,13 @@ def project(project_id):
             project_info = yaml.load(res.content)['info']
 
     backlink = '/'
-    edit = '/projects/%d/edit' % project_id
+    edit = '/project/%d/edit' % project_id
     return render_template('project.html', project=project, bugs=bugs,
                            edit=edit, jenkins_builds=builds,
                            project_info=project_info, backlink=backlink)
 
 
-@projects.route("/projects/<int:project_id>/deployments",
+@projects.route("/project/<int:project_id>/deployments",
                 methods=['GET', 'POST'])
 @only_for_editors
 def add_deployment(project_id):
@@ -129,22 +105,22 @@ def add_deployment(project_id):
         deployment = objdict({'project_id': project_id})
         form.populate_obj(deployment)
         g.db.create_entry('deployment', deployment)
-        return redirect('/projects/%d' % project_id)
+        return redirect('/project/%d' % project_id)
 
     action = 'Add a new deployment for %s' % project.name
     return render_template("edit.html", form=form, action=action,
-                           form_action="/projects/%s/deployments" % project_id)
+                           form_action="/project/%s/deployments" % project_id)
 
 
-@projects.route("/projects/<int:project_id>/deployments/<int:depl_id>/delete",
+@projects.route("/project/<int:project_id>/deployments/<int:depl_id>/delete",
                 methods=['GET'])
 @only_for_editors
 def remove_deployment(project_id, depl_id):
     g.db.delete_entry('deployment', depl_id)
-    return redirect('/projects/%d' % (project_id))
+    return redirect('/project/%d' % (project_id))
 
 
-@projects.route("/projects/<int:project_id>/deployments/<int:depl_id>/edit",
+@projects.route("/project/<int:project_id>/deployments/<int:depl_id>/edit",
                 methods=['GET', 'POST'])
 @only_for_editors
 def edit_deployment(project_id, depl_id):
@@ -155,10 +131,10 @@ def edit_deployment(project_id, depl_id):
     if request.method == 'POST' and form.validate():
         form.populate_obj(depl)
         g.db.update_entry('deployment', depl)
-        return redirect('/projects/%d' % (project_id))
+        return redirect('/project/%d' % (project_id))
 
-    form_action = '/projects/%d/deployments/%d/edit'
-    backlink = '/projects/%d' % project_id
+    form_action = '/project/%d/deployments/%d/edit'
+    backlink = '/project/%d' % project_id
     action = 'Edit %r for %s' % (depl.name, project['name'])
     return render_template("edit.html", form=form, action=action,
                            project=project, backlink=backlink,
