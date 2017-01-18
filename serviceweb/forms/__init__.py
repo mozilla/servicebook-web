@@ -61,6 +61,13 @@ def DynField(name, coerce=int, choices=get_users):
     return DynamicSelectField(name, coerce=coerce, choices=choices)
 
 
+class TagForm(BaseForm):
+    name = fields.StringField()
+
+
+_FORMS['tag'] = TagForm
+
+
 class ProjectForm(BaseForm):
     name = fields.StringField()
     homepage = fields.StringField()

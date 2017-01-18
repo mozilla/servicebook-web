@@ -3,5 +3,41 @@
 {% set subtitle = subtitle %}
 
 {% block page %}
+<div id="editForm" title="edit">
+</div>
+
  {% include '_form.html' %}
 {% endblock %}
+
+{% block head %}
+{{super()}}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+{% endblock %}
+
+
+
+{% block scripts %}
+
+{{super()}}
+
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+
+function editEntry() {
+}
+
+
+dialog = $('#editForm').dialog({autoOpen: false, modal: true, width: '80%'});
+
+
+$('.editLink').click(function(e) {
+    e.preventDefault();
+    $('#editForm').load(this.href);
+    $('#editForm').dialog('open');
+});
+
+
+</script>
+{% endblock %}
+
+

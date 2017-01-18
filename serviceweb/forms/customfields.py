@@ -1,4 +1,5 @@
 from wtforms import fields, widgets
+from wtforms.widgets.core import html_params, HTMLString
 
 
 __all__ = ['DynamicSelectField', 'JsonListField', 'LargeTextAreaField']
@@ -19,12 +20,38 @@ class DynamicSelectField(fields.SelectField):
             raise ValueError(self.gettext('Not a valid choice'))
 
 
+_BUTTON = """\
+
+<a href="%s" class="editLink btn btn-default btn-xs" type="button">
+  <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+  %s
+</a>"""
+
+
 class ExtendableListWidget(widgets.ListWidget):
+
+    def _get_button(self, label="", target='#'):
+        return _BUTTON % (target, label)
+
     def __call__(self, field, **kwargs):
-        html = super(ExtendableListWidget, self).__call__(field, **kwargs)
-        bt = '<a class="btn btn-default" href="#" role="button">Add</a>'
-        html += bt
-        return html
+        kwargs.setdefault('id', field.id)
+        html = ['<%s %s>' % (self.html_tag, html_params(**kwargs))]
+
+        for subfield in field:
+            html.append('<li>')
+            if self.prefix_label:
+                html.append('%s %s' % (subfield.label, subfield()))
+            else:
+                html.append('%s %s' % (subfield(), subfield.label))
+
+            table, entry_id = field.table, subfield.data
+            target = '/%s/%s/edit?inline=1' % (table, entry_id)
+            html.append(self._get_button('Edit', target))
+            html.append('</li>')
+
+        html.append('</%s>' % self.html_tag)
+        html.append(self._get_button('Add', '/%s/create' % field.table))
+        return HTMLString(''.join(html))
 
 
 class JsonListField(fields.SelectMultipleField):
@@ -33,8 +60,12 @@ class JsonListField(fields.SelectMultipleField):
 
     def __init__(self, *args, **kw):
         checkbox_label = kw.pop('checkbox_label', 'name')
+        table = kw.pop('table', None)
         super(JsonListField, self).__init__(*args, **kw)
+        if table is None:
+            table = self.id.rstrip('s')
         self.cb_label = checkbox_label
+        self.table = table
 
     def process_data(self, data):
         if data is None:
