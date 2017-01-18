@@ -35,3 +35,10 @@ def edit_table(table_name, entry_id):
 
     return render_template(tmpl, form=form, action=action, backlink=backlink,
                            form_action='/%s/%d/edit' % (table_name, entry_id))
+
+
+@edit.route("/<table_name>/<int:entry_id>/add_relation/<target>",
+            methods=['GET', 'POST'])
+@only_for_editors
+def add_relation(table_name, entry_id, target):
+    raise NotImplementedError()

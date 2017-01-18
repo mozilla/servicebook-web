@@ -1,3 +1,4 @@
+# XXX doing too much work here, needs to simplify form gen..
 from wtforms import Form, fields
 from flask import g
 from serviceweb.util import fullname
@@ -61,6 +62,23 @@ def DynField(name, coerce=int, choices=get_users):
     return DynamicSelectField(name, coerce=coerce, choices=choices)
 
 
+class LangForm(BaseForm):
+    name = fields.StringField()
+    version = fields.StringField()
+
+
+_FORMS['language'] = LangForm
+
+
+class ProjectTestForm(BaseForm):
+    name = fields.StringField()
+    url = fields.StringField()
+    operational = fields.BooleanField()
+
+
+_FORMS['project_test'] = ProjectTestForm
+
+
 class TagForm(BaseForm):
     name = fields.StringField()
 
@@ -74,10 +92,12 @@ class ProjectForm(BaseForm):
     description = fields.TextAreaField()
     long_description = LargeTextAreaField(description='You can use Markdown.')
     repositories = JsonListField('repositories',
-                                 checkbox_label=display_repo)
+                                 checkbox_label=display_repo,
+                                 table='link')
     tags = JsonListField('tags')
     languages = JsonListField('languages', checkbox_label=display_lang)
-    tests = JsonListField('tests', checkbox_label=display_repo)
+    tests = JsonListField('tests', checkbox_label=display_repo,
+                          table='project_test')
     jenkins_jobs = JsonListField('jenkins_jobs')
     deployments = JsonListField('deployments', checkbox_label=display_depl)
     irc = fields.StringField()
@@ -93,6 +113,14 @@ class ProjectForm(BaseForm):
 
 
 _FORMS['project'] = ProjectForm
+
+
+class LinkForm(BaseForm):
+    url = fields.StringField()
+    name = fields.StringField()
+
+
+_FORMS['link'] = LinkForm
 
 
 class DeploymentForm(BaseForm):

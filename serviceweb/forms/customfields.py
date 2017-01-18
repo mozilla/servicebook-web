@@ -23,15 +23,15 @@ class DynamicSelectField(fields.SelectField):
 _BUTTON = """\
 
 <a href="%s" class="editLink btn btn-default btn-xs" type="button">
-  <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+  <span class="glyphicon glyphicon-%s" aria-hidden="true"></span>
   %s
 </a>"""
 
 
 class ExtendableListWidget(widgets.ListWidget):
 
-    def _get_button(self, label="", target='#'):
-        return _BUTTON % (target, label)
+    def _get_button(self, label="", target='#', icon="pencil"):
+        return _BUTTON % (target, icon, label)
 
     def __call__(self, field, **kwargs):
         kwargs.setdefault('id', field.id)
@@ -46,11 +46,12 @@ class ExtendableListWidget(widgets.ListWidget):
 
             table, entry_id = field.table, subfield.data
             target = '/%s/%s/edit?inline=1' % (table, entry_id)
-            html.append(self._get_button('Edit', target))
+            html.append(self._get_button('', target))
             html.append('</li>')
 
         html.append('</%s>' % self.html_tag)
-        html.append(self._get_button('Add', '/%s/create' % field.table))
+        target = 'add_relation/%s?inline=1' % field.table
+        html.append(self._get_button('Add', target, 'plus'))
         return HTMLString(''.join(html))
 
 
