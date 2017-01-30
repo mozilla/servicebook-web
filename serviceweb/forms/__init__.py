@@ -94,6 +94,8 @@ class ProjectForm(BaseForm):
     homepage = fields.StringField()
     description = fields.TextAreaField()
     long_description = LargeTextAreaField(description='You can use Markdown.')
+    # xXXX filter by itermediate table
+    #
     repositories = JsonListField('repositories',
                                  checkbox_label=display_entry,
                                  table='link')
