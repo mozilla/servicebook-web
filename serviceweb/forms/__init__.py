@@ -100,9 +100,10 @@ class ProjectForm(BaseForm):
     tags = JsonListField('tags')
     languages = JsonListField('languages', checkbox_label=display_entry)
     tests = JsonListField('tests', checkbox_label=display_entry,
-                          table='project_test')
-    jenkins_jobs = JsonListField('jenkins_jobs')
-    deployments = JsonListField('deployments', checkbox_label=display_entry)
+                          table='project_test', relation_field='project_id')
+    jenkins_jobs = JsonListField('jenkins_jobs', relation_field='project_id')
+    deployments = JsonListField('deployments', checkbox_label=display_entry,
+                                relation_field='project_id')
     irc = fields.StringField()
     bz_product = fields.StringField()
     bz_component = fields.StringField()

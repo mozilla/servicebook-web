@@ -35,6 +35,7 @@ class ExtendableListWidget(widgets.ListWidget):
 
     def __call__(self, field, **kwargs):
         kwargs.setdefault('id', field.id)
+        relation_field = kwargs.pop('relation_field', None)
         html = ['<%s %s>' % (self.html_tag, html_params(**kwargs))]
 
         for subfield in field:
@@ -51,6 +52,8 @@ class ExtendableListWidget(widgets.ListWidget):
 
         html.append('</%s>' % self.html_tag)
         target = 'add_relation/%s/%s?inline=1' % (field.id, field.table)
+        if relation_field:
+            target += '&relation=%s' % relation_field
         html.append(self._get_button('Add', target, 'plus'))
         return HTMLString(''.join(html))
 
@@ -61,12 +64,14 @@ class JsonListField(fields.SelectMultipleField):
 
     def __init__(self, *args, **kw):
         checkbox_label = kw.pop('checkbox_label', 'name')
+        relation_field = kw.pop('relation_field', None)
         table = kw.pop('table', None)
         super(JsonListField, self).__init__(*args, **kw)
         if table is None:
             table = self.id.rstrip('s')
         self.cb_label = checkbox_label
         self.table = table
+        self.relation_field = relation_field
 
     def process_data(self, data):
         if data is None:
@@ -85,6 +90,7 @@ class JsonListField(fields.SelectMultipleField):
 
     def __call__(self, **kwargs):
         kwargs['class_'] = 'checkbox'
+        kwargs['relation_field'] = self.relation_field
         return super(JsonListField, self).__call__(**kwargs)
 
     def pre_validate(self, form):

@@ -36,7 +36,14 @@ def edit_table(table_name, entry_id):
 @only_for_editors
 def add_relation(table_name, entry_id, relname, target):
     tmpl = "add_relation.html"
-    existing = g.db.get_entries(target)
+    relation = request.args.get('relation')
+    if relation:
+        filters = [{'name': relation,
+                    'op': 'eq',
+                    'val': entry_id}]
+        existing = g.db.get_entries(target, filters=filters)
+    else:
+        existing = g.db.get_entries(target)
     form = get_form(target)(request.form)
     action = '/%s/%d/add_relation/%s/%s' % (table_name, entry_id, relname,
                                             target)
