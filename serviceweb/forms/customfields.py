@@ -77,7 +77,7 @@ class JsonListField(fields.SelectMultipleField):
     def iter_choices(self):
         for entry in self.data:
             if callable(self.cb_label):
-                label = self.cb_label(entry)
+                label = self.cb_label(self, entry)
             else:
                 label = entry[self.cb_label]
 

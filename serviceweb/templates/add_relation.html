@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{action}}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href='/static/css/bookstyle.css' media='screen' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Pick existing one</h2>
+        <ul class="checkbox" id="tags">
+          {% for entry in existing %}
+          <li><input name="entry" value="{{entry.id}}" type="checkbox"> <label for="tags-0">{{entry}}}</label></li>
+          {% endfor %}
+        </ul>
+
+      <h2>Add a new entry</h2>
+      {% include '_form.html' %}
+    </div>
+  </body>
+</html>

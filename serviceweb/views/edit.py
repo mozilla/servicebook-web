@@ -41,4 +41,8 @@ def edit_table(table_name, entry_id):
             methods=['GET', 'POST'])
 @only_for_editors
 def add_relation(table_name, entry_id, target):
-    raise NotImplementedError()
+    tmpl = "add_relation.html"
+    existing = g.db.get_entries(target)
+    form = get_form(target)(request.form)
+    return render_template(tmpl, form=form, form_action='edit',
+                           existing=existing)
