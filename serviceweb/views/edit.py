@@ -1,6 +1,7 @@
 from flask import Blueprint
 from serviceweb.auth import only_for_editors
 from serviceweb.forms import get_form
+from restjson.client import objdict
 from flask import request, redirect, g
 from flask import render_template
 
@@ -48,9 +49,12 @@ def add_relation(table_name, entry_id, relname, target):
     action = '/%s/%d/add_relation/%s/%s' % (table_name, entry_id, relname,
                                             target)
 
+    if relation:
+        action += '?relation=%s' % relation
+
     if request.method == 'POST':
         picked_entries = request.form.getlist('picked_entry')
-        if picked_entries is not None:
+        if len(picked_entries):
             entry = g.db.get_entry(table_name, entry_id)
             existing_ids = [rel['id'] for rel in entry[relname]]
             changed = False
@@ -62,7 +66,15 @@ def add_relation(table_name, entry_id, relname, target):
                 g.db.update_entry(table_name, entry)
         else:
             # creation
-            raise NotImplementedError()
+            if form.validate():
+                new_relation = objdict()
+                form.populate_obj(new_relation)
+                if relation:
+                    new_relation[relation] = entry_id
+                g.db.create_entry(target, new_relation)
+
+                # XXX is that the best way ?
+                g.db.bust_cache(table_name, entry_id)
 
         return redirect('/%s/%d/edit' % (table_name, entry_id))
 
