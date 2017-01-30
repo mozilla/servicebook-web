@@ -40,22 +40,25 @@ def get_projects():
     return [(entry.id, entry) for entry in projects]
 
 
-def display_depl(entry):
-    return '%(name)s deployed at %(endpoint)s' % entry
+def display_entry(table, entry):
+    if table == 'deployment':
+        return '%(name)s deployed at %(endpoint)s' % entry
+    if table == 'repository':
+        if entry['name'] is not None:
+            return '%(name)s -- %(url)s' % entry
+        return entry['url']
+    if table == 'lang':
+        data = dict(entry)
+        if data['version'] is None:
+            data['version'] = ''
+        res = '%(name)s %(version)s' % data
+        return res.strip()
 
+    # trying default stuff
+    if 'name' in entry:
+        return entry['name']
 
-def display_repo(entry):
-    if entry['name'] is not None:
-        return '%(name)s -- %(url)s' % entry
-    return entry['url']
-
-
-def display_lang(entry):
-    data = dict(entry)
-    if data['version'] is None:
-        data['version'] = ''
-    res = '%(name)s %(version)s' % data
-    return res.strip()
+    return entry['id']
 
 
 def DynField(name, coerce=int, choices=get_users):
@@ -92,14 +95,14 @@ class ProjectForm(BaseForm):
     description = fields.TextAreaField()
     long_description = LargeTextAreaField(description='You can use Markdown.')
     repositories = JsonListField('repositories',
-                                 checkbox_label=display_repo,
+                                 checkbox_label=display_entry,
                                  table='link')
     tags = JsonListField('tags')
-    languages = JsonListField('languages', checkbox_label=display_lang)
-    tests = JsonListField('tests', checkbox_label=display_repo,
+    languages = JsonListField('languages', checkbox_label=display_entry)
+    tests = JsonListField('tests', checkbox_label=display_entry,
                           table='project_test')
     jenkins_jobs = JsonListField('jenkins_jobs')
-    deployments = JsonListField('deployments', checkbox_label=display_depl)
+    deployments = JsonListField('deployments', checkbox_label=display_entry)
     irc = fields.StringField()
     bz_product = fields.StringField()
     bz_component = fields.StringField()
