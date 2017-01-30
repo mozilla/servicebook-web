@@ -50,7 +50,7 @@ class ExtendableListWidget(widgets.ListWidget):
             html.append('</li>')
 
         html.append('</%s>' % self.html_tag)
-        target = 'add_relation/%s?inline=1' % field.table
+        target = 'add_relation/%s/%s?inline=1' % (field.id, field.table)
         html.append(self._get_button('Add', target, 'plus'))
         return HTMLString(''.join(html))
 
@@ -77,7 +77,7 @@ class JsonListField(fields.SelectMultipleField):
     def iter_choices(self):
         for entry in self.data:
             if callable(self.cb_label):
-                label = self.cb_label(self, entry)
+                label = self.cb_label(self.table, entry)
             else:
                 label = entry[self.cb_label]
 

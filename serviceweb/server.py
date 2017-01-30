@@ -12,9 +12,10 @@ from serviceweb.auth import get_user, GithubAuth
 from serviceweb.views.auth import unauthorized_view
 from serviceweb.mozillians import Mozillians
 from serviceweb.translations import APP_TRANSLATIONS
-
 from serviceweb.util import fullname as _fullname
 from serviceweb.util import testing_completion
+from serviceweb.forms import display_entry as _de
+
 from restjson.client import Client
 
 
@@ -68,6 +69,10 @@ def create_app(ini_file=DEFAULT_INI_FILE):
     @app.template_filter('fullname')
     def fullname(s):
         return _fullname(s)
+
+    @app.template_filter('display_entry')
+    def display_entry(entry, table):
+        return _de(table, entry)
 
     logging.config.fileConfig(ini_file)
     return app

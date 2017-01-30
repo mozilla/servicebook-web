@@ -17,12 +17,6 @@ def edit_table(table_name, entry_id):
 
     if request.method == 'POST' and form.validate():
         form.populate_obj(entry)
-
-        # not updating relations for now
-        for field in list(entry.keys()):
-            if isinstance(entry[field], (dict, list)):
-                del entry[field]
-
         g.db.update_entry(table_name, entry)
         return redirect('/%s/%d' % (table_name, entry_id))
 
@@ -37,12 +31,33 @@ def edit_table(table_name, entry_id):
                            form_action='/%s/%d/edit' % (table_name, entry_id))
 
 
-@edit.route("/<table_name>/<int:entry_id>/add_relation/<target>",
+@edit.route("/<table_name>/<int:entry_id>/add_relation/<relname>/<target>",
             methods=['GET', 'POST'])
 @only_for_editors
-def add_relation(table_name, entry_id, target):
+def add_relation(table_name, entry_id, relname, target):
     tmpl = "add_relation.html"
     existing = g.db.get_entries(target)
     form = get_form(target)(request.form)
-    return render_template(tmpl, form=form, form_action='edit',
-                           existing=existing)
+    action = '/%s/%d/add_relation/%s/%s' % (table_name, entry_id, relname,
+                                            target)
+
+    if request.method == 'POST':
+        picked_entries = request.form.getlist('picked_entry')
+        if picked_entries is not None:
+            entry = g.db.get_entry(table_name, entry_id)
+            existing_ids = [rel['id'] for rel in entry[relname]]
+            changed = False
+            for picked in picked_entries:
+                if picked not in existing_ids:
+                    entry[relname].append({'id': picked})
+                    changed = True
+            if changed:
+                g.db.update_entry(table_name, entry)
+        else:
+            # creation
+            raise NotImplementedError()
+
+        return redirect('/%s/%d/edit' % (table_name, entry_id))
+
+    return render_template(tmpl, form=form, form_action=action,
+                           existing=existing, target=target)

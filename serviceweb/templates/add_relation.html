@@ -9,11 +9,18 @@
   <body>
     <div class="container">
       <h2>Pick existing one</h2>
+      <form action="{{form_action}}" method="POST">
+
         <ul class="checkbox" id="tags">
           {% for entry in existing %}
-          <li><input name="entry" value="{{entry.id}}" type="checkbox"> <label for="tags-0">{{entry}}}</label></li>
+          <li><input name="picked_entry" value="{{entry.id}}" type="checkbox"> <label
+              for="tags-0">{{entry|display_entry(target)}}</label></li>
           {% endfor %}
         </ul>
+ <button type="submit" class="btn btn-default btn-lg">
+  <span class="glyphicon glyphicon-plus" aria-hidden="true">
+  </span> Pick
+ </button>
 
       <h2>Add a new entry</h2>
       {% include '_form.html' %}

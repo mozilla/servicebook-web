@@ -43,16 +43,16 @@ def get_projects():
 def display_entry(table, entry):
     if table == 'deployment':
         return '%(name)s deployed at %(endpoint)s' % entry
-    if table == 'repository':
+    if table == 'link':
         if entry['name'] is not None:
             return '%(name)s -- %(url)s' % entry
         return entry['url']
-    if table == 'lang':
-        data = dict(entry)
-        if data['version'] is None:
-            data['version'] = ''
-        res = '%(name)s %(version)s' % data
-        return res.strip()
+    if table == 'language':
+        name = entry['name']
+        version = entry.get('version')
+        if version:
+            name += ' ' + version
+        return name
 
     # trying default stuff
     if 'name' in entry:
