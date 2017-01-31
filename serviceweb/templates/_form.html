@@ -1,4 +1,7 @@
 <form action="{{form_action}}" method="POST">
+  <input type="hidden" name="from_" value="{{from_}}"></input>
+  <input type="hidden" name="bust_cache" value="{{bust_cache}}"></input>
+
  {% for field in form %}
    {% if field.errors %}
     <div class="form-group has-error">
@@ -14,7 +17,7 @@
    <span class="help-inline">{{field.description}}</span>
    {% endif %}
 
-   {{ field(class_='form-control')|safe}}
+   {{ field(class_='form-control', from_=request.path)|safe}}
 
    {% if field.errors %}
       {% for error in field.errors %}

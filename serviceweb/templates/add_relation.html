@@ -14,8 +14,11 @@
 
         <ul class="checkbox" id="tags">
           {% for entry in existing %}
-          <li><input name="picked_entry" value="{{entry.id}}" type="checkbox"> <label
-              for="tags-0">{{entry|display_entry(target)}}</label></li>
+          <li>
+            <input name="picked_entry" value="{{entry.id}}"
+                   {% if entry.checked %}checked{% endif %} type="checkbox">
+            <label for="tags-0">{{entry|display_entry(target)}}</label>
+          </li>
           {% endfor %}
         </ul>
         <button type="submit" class="btn btn-default btn-lg">

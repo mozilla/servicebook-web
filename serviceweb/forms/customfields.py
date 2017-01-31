@@ -36,6 +36,7 @@ class ExtendableListWidget(widgets.ListWidget):
     def __call__(self, field, **kwargs):
         kwargs.setdefault('id', field.id)
         relation_field = kwargs.pop('relation_field', None)
+        from_ = kwargs.pop('from_', "{{request.path}}")
         html = ['<%s %s>' % (self.html_tag, html_params(**kwargs))]
 
         for subfield in field:
@@ -46,7 +47,8 @@ class ExtendableListWidget(widgets.ListWidget):
                 html.append('%s %s' % (subfield(), subfield.label))
 
             table, entry_id = field.table, subfield.data
-            target = '/%s/%s/edit?inline=1' % (table, entry_id)
+            target = '/%s/%s/edit?inline=1&bust_cache=1&from_=%s'
+            target = target % (table, entry_id, from_)
             html.append(self._get_button('', target))
             html.append('</li>')
 
