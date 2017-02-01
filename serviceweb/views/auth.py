@@ -20,8 +20,9 @@ def login():
 
 @auth.route('/logout')
 def logout():
-    del session['token']
-    del session['user_id']
+    for field in ('token', 'user_id', 'user'):
+        if field in session:
+            del session[field]
     flash('Logged out')
     return redirect('/')
 
@@ -48,6 +49,8 @@ def authorized():
 
     session['token'] = authorization.access_token
     session['user_id'] = db_user['id']
+    # cache busting when user data changes?
+    session['user'] = db_user
     flash('Logged in as ' + str(db_user))
     return redirect('/')
 

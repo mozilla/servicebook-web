@@ -106,14 +106,14 @@
   </div>
   </div>
 
+  {% if project.deployments %}
   <h2>Deployments</h2>
+  {% endif %}
 
   {% for deployment in project.deployments %}
   <div class="panel panel-primary">
   <div class="panel-heading">
   <h2 class="panel-title">{{deployment.name}}  <span class="badge">v0.3.0</span>
-    <span class="badge"><a href="/projects/{{project.id}}/deployments/{{deployment.id}}/edit">Edit</a></span>
-    <span class="badge"><a href="/projects/{{project.id}}/deployments/{{deployment.id}}/delete">Remove</a></span>
   </h2>
   </div>
   <div class="panel-body">
@@ -138,9 +138,5 @@
 </div>
 
   {% endfor %}
-  <div><a href="/projects/{{project.id}}/deployments" role="button" class="btn btn-default btn-lg">
-  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add a Deployment
- </a>
-  </div>
 </div>
 {% endblock %}

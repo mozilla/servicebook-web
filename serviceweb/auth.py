@@ -11,10 +11,14 @@ def GithubAuth(app):
     app.extensions['github'] = github
 
 
+
 def github2dbuser(github_user):
+    login = github_user['login']
     filters = [{'name': 'github',
                 'op': 'eq',
-                'val': github_user['login']}]
+                'val': login}]
+
+    # XXX this call should have an internal cache
     res = g.db.get_entries('user', filters=filters)
 
     if len(res) == 1:
@@ -40,6 +44,9 @@ def github2dbuser(github_user):
 
 
 def get_user(app):
+    if 'user' in session:
+        return session['user']
+
     if 'token' not in session:
         return None
 
@@ -48,7 +55,8 @@ def get_user(app):
     resp = auth.get('/user')
     if resp.status_code == 200:
         user = resp.json()
-        return github2dbuser(user)
+        user = github2dbuser(user)
+        return user
     else:
         return None
 
