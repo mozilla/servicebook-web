@@ -144,6 +144,8 @@ class UserForm(BaseForm):
     github = fields.StringField()
     editor = fields.BooleanField()
     email = fields.StringField()
+    irc = fields.StringField()
+    mozillians_login = fields.StringField()
 
     def label(self, entry):
         return fullname(entry)

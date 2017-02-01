@@ -13,8 +13,8 @@ def user_view(user_id):
     user = g.db.get_entry('user', user_id)
     mozillians = users_bp.app.extensions['mozillians']
 
-    if user['email']:
-        mozillian = mozillians.get_info(user['email'])
+    if user['mozillians_login']:
+        mozillian = mozillians.get_info(user['mozillians_login'])
     else:
         mozillian = {}
 

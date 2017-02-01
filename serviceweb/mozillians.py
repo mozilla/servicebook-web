@@ -10,12 +10,12 @@ class Mozillians(object):
             app.extensions = {}
         app.extensions['mozillians'] = self
 
-    def get_info(self, email):
-        if email in self._cache:
-            url = self._cache[email]
+    def get_info(self, username):
+        if username in self._cache:
+            url = self._cache[username]
         else:
-            url = '?api-key=%s&email=%s&format=json'
-            url = url % (self.key, email)
+            url = '?api-key=%s&username=%s&format=json'
+            url = url % (self.key, username)
             try:
                 user = requests.get(self.endpoint + url).json()
             except requests.exceptions.SSLError:
@@ -29,7 +29,7 @@ class Mozillians(object):
                 return {}
 
             url = res[0]['_url']
-            self._cache[email] = url
+            self._cache[username] = url
 
         url = url + '?api-key=%s&format=json'
         url = url % self.key
