@@ -1,8 +1,9 @@
 from flask import g
-
 from flask_nav import Nav, register_renderer
 from flask_nav.elements import View, Navbar, Link
 from flask_bootstrap.nav import BootstrapRenderer
+
+from serviceweb.util import fullname
 
 
 class RightNavbar(Navbar):
@@ -30,10 +31,9 @@ def build_nav():
         link = Link('Github Login', '/login')
     else:
         elements.append(View('Manage Users', 'users.users_view'))
-        firstname = user['firstname'].capitalize()
-        lastname = user['lastname'].capitalize()
-        login = '%s %s' % (firstname, lastname)
-        link = Link('%s (logout)' % login, '/logout')
+        name = fullname(user)
+        elements.append(Link(name, '/user/%d' % user['id']))
+        link = Link('Logout', '/logout')
 
     elements.append(link)
 
