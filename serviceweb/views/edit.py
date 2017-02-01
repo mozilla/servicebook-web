@@ -70,16 +70,11 @@ def add_relation(table_name, entry_id, relname, target):
         action += '?relation=%s' % relation
 
     if request.method == 'POST':
-        picked_entries = request.form.getlist('picked_entry')
-        if len(picked_entries):
-            existing_ids = [rel['id'] for rel in entry[relname]]
-            changed = False
-            for picked in picked_entries:
-                if picked not in existing_ids:
-                    entry[relname].append({'id': picked})
-                    changed = True
-            if changed:
-                g.db.update_entry(table_name, entry)
+        if 'pick' in request.form:
+            picked_entries = request.form.getlist('picked_entry')
+            entry[relname] = [{'id': e} for e in picked_entries]
+            # TODO check if changed
+            g.db.update_entry(table_name, entry)
         else:
             # creation
             if form.validate():
@@ -87,9 +82,12 @@ def add_relation(table_name, entry_id, relname, target):
                 form.populate_obj(new_relation)
                 if relation:
                     new_relation[relation] = entry_id
-                g.db.create_entry(target, new_relation)
+
+                res = g.db.create_entry(target, new_relation)
 
                 # XXX is that the best way ?
+                entry[relname].append({'id': res.id})
+                g.db.update_entry(table_name, entry)
                 g.db.bust_cache(table_name, entry_id)
 
         return redirect('/%s/%d/edit' % (table_name, entry_id))
