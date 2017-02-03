@@ -7,8 +7,7 @@
 <div class="jumbotron">
   <h1>Servicebook</h1>
   <p>Search for anything on our active projects, or just <a href="/info">browse through them</a></p>
-
-  <form action="search" method="get" role="search">
+  <form action="" method="get" role="search">
     <div class="input-group">
       <input type="text" class="form-control" placeholder="Search People & Projects" name="search" id="search">
        <div class="input-group-btn">
@@ -18,5 +17,15 @@
   </form>
 </div>
 
+{% if searched %}
+<h2>Results</h2>
+
+{% if not search_results %}
+<p>No results.</p>
+{% else %}
+
+{% endif %}
+
+{% endif %}
 
 {% endblock %}
