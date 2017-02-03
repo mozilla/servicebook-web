@@ -7,6 +7,7 @@ from flask_iniconfig import INIConfig
 from flaskext.markdown import Markdown
 
 from serviceweb.nav import nav
+from serviceweb.search import Search
 from serviceweb.views import blueprints
 from serviceweb.auth import get_user, GithubAuth
 from serviceweb.views.auth import unauthorized_view
@@ -40,6 +41,7 @@ def create_app(ini_file=DEFAULT_INI_FILE):
         bp.app = app
 
     app.db = Client(app.config['common']['service_book'])
+    app.search = Search(app.config['common']['service_book'])
     app.register_error_handler(401, unauthorized_view)
     nav.init_app(app)
 
@@ -52,6 +54,7 @@ def create_app(ini_file=DEFAULT_INI_FILE):
     def before_req():
         g.debug = _DEBUG
         g.db = app.db
+        g.search = app.search
         g.user = get_user(app)
 
     @app.template_filter('translate')
