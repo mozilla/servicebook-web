@@ -24,8 +24,7 @@ class MyNav(Nav):
 def build_nav():
     user = g.user
     elements = [View('Home', 'frontend.home'),
-                View('Projects info', 'frontend.info'),
-                View('Resource coverage', 'frontend.coverage')]
+                View('Projects', 'frontend.info')]
 
     if user is None:
         link = Link('Github Login', '/login')

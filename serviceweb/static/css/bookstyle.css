@@ -42,4 +42,13 @@ body {
 
 .label-as-badge {
 	    border-radius: 1em;
-	}
+}
+
+.w3-progress-container{width:100%;height:1.5em;position:relative;background-color:#f1f1f1}
+.w3-progressbar{background-color:#757575;height:100%;position:absolute;line-height:inherit;padding-left: 2px;
+ text-shadow:0.5px 0.5px black;}
+
+.w3-blue,.w3-hover-blue:hover{color:#fff!important;background-color:#2196F3!important}
+.w3-red,.w3-hover-red:hover{color:#fff!important;background-color:#f44336!important}
+.w3-green,.w3-hover-green:hover{color:#fff!important;background-color:#4CAF50!important}
+

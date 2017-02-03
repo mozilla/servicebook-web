@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{% set title = 'Projects Info' %}
-{% set subtitle = "Who, Where, What, etc." %}
+{% set title = '' %}
+{% set subtitle = "" %}
 
 {% block page %}
 <div class="table-responsive">
@@ -8,7 +8,9 @@
     <thead>
       <tr>
         <th>Project</th>
-        <th>People Involved</th>
+        <th>People</th>
+        <th>Builds</th>
+        <th>Test Coverage</th>
       </tr>
     </thead>
     <tbody>
@@ -48,6 +50,28 @@
             </a>
           {% endif %}
         </td>
+      <td>
+       <img src="/static/jenkins_success.png"/>
+       <img src="/static/jenkins_success.png"/>
+       <img src="/static/jenkins_success.png"/>
+       <img src="/static/jenkins_failure.png"/>
+       <img src="/static/jenkins_success.png"/>
+      </td>
+      <td>
+        <div class="w3-progress-container">
+          {% if project|completion < 30 %}
+          <div class="w3-progressbar w3-red" style="width:{{project|completion}}%">
+          {% endif %}
+          {% if project|completion < 65 and project|completion > 30 %}
+          <div class="w3-progressbar w3-blue" style="width:{{project|completion}}%">
+          {% endif %}
+          {% if project|completion > 65 %}
+          <div class="w3-progressbar w3-green" style="width:{{project|completion}}%">
+          {% endif %}
+            <div class="w3-center w3-text-white">{{project|completion}}%</div>
+          </div>
+        </div>
+      </td>
       </tr>
     {% endfor %}
     </tbody>
