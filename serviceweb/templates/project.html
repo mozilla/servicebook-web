@@ -7,10 +7,10 @@
 
 <h3>
 {% for tag in project.tags %}
-<span class="label label-success">{{tag.name}}</span>
+<a class="label label-success" href="/?search={{tag.name}}">{{tag.name}}</a>
 {% endfor %}
 {% for lang in project.languages %}
-<span class="label label-info">{{lang.name}}{% if lang.version %}&nbsp;{{lang.version}}{% endif %}</span>
+<a class="label label-info" href="/?search={{lang.name}}{% if lang.version %}&nbsp;{{lang.version}}{% endif %}">{{lang.name}}{% if lang.version %}&nbsp;{{lang.version}}{% endif %}</a>
 {% endfor %}
 </h3>
 
