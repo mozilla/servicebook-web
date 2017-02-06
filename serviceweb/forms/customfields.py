@@ -19,6 +19,11 @@ class DynamicSelectField(fields.SelectField):
         else:
             raise ValueError(self.gettext('Not a valid choice'))
 
+    def post_validate(self, valuelist, stopped):
+        if self.data == -1:
+            self.data = None
+        return super(DynamicSelectField, self).post_validate(valuelist, stopped)
+
 
 _BUTTON = """\
 
