@@ -11,8 +11,8 @@ from serviceweb.tests.support import BaseTest
 class FrontEndTest(BaseTest):
 
     def test_browsing_project(self):
-        r = self.app.get('/')
-        first_proj_link = r.html.findAll('a')[2]['href']
+        r = self.app.get('/info')
+        first_proj_link = r.html.findAll('a')[3]['href']
 
         bz_matcher = re.compile('.*bugzilla.*')
         bz_resp = {'bugs': []}

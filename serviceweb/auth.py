@@ -11,7 +11,6 @@ def GithubAuth(app):
     app.extensions['github'] = github
 
 
-
 def github2dbuser(github_user):
     login = github_user['login']
     filters = [{'name': 'github',

@@ -1,3 +1,4 @@
+import time
 import os
 import logging.config
 
@@ -18,6 +19,7 @@ from serviceweb.util import testing_completion
 from serviceweb.forms import display_entry as _de
 
 from restjson.client import Client
+import humanize
 
 
 HERE = os.path.dirname(__file__)
@@ -56,6 +58,11 @@ def create_app(ini_file=DEFAULT_INI_FILE):
         g.db = app.db
         g.search = app.search
         g.user = get_user(app)
+
+    @app.template_filter('humanize')
+    def _humanize(last_modified):
+        age = time.time() - (last_modified / 1000.)
+        return humanize.naturaltime(age)
 
     @app.template_filter('translate')
     def translate_string(s):

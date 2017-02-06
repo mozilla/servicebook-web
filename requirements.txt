@@ -6,6 +6,7 @@ flask-markdown
 flask-nav
 Flask-WTF
 PyYAML
+humanize
 rauth
 -e git+https://github.com/tarekziade/restjson.git#egg=restjson
 -e git+https://github.com/tarekziade/smwogger#egg=smwogger

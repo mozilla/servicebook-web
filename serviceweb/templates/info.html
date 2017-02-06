@@ -11,6 +11,7 @@
         <th>People</th>
         <th>Builds</th>
         <th>Test Coverage</th>
+        <th>Last Modified</th>
       </tr>
     </thead>
     <tbody>
@@ -72,6 +73,7 @@
           </div>
         </div>
       </td>
+      <td>{{project.last_modified|humanize}}</td>
       </tr>
     {% endfor %}
     </tbody>
