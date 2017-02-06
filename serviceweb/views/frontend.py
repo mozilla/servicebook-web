@@ -14,7 +14,7 @@ def home():
         search_results = []
         searched = False
 
-    projects = g.db.get_entries('project', sort='name')
+    projects = g.db.get_entries('project', sort='-last_modified')
     return render_template('home.html', projects=projects,
                            search_results=search_results,
                            searched=searched)
@@ -22,11 +22,11 @@ def home():
 
 @frontend.route("/info")
 def info():
-    projects = g.db.get_entries('project', sort='name')
+    projects = g.db.get_entries('project', sort='-last_modified')
     return render_template('info.html', projects=projects)
 
 
 @frontend.route("/coverage")
 def coverage():
-    projects = g.db.get_entries('project', sort='name')
+    projects = g.db.get_entries('project', sort='-last_modified')
     return render_template('coverage.html', projects=projects)
