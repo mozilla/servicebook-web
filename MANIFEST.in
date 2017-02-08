@@ -5,3 +5,5 @@ include requirements-test.txt
 include tox.ini
 include .travis.yml
 include serviceweb/dump.json
+recursive-include serviceweb/templates *
+recursive-include serviceweb/static *
