@@ -1,6 +1,13 @@
 Service Book
 ============
 
+.. image:: http://coveralls.io/repos/github/mozilla/servicebook-web/badge.svg?branch=master
+   :target: https://coveralls.io/github/mozilla/servicebook-web?branch=master
+
+.. image:: http://travis-ci.org/mozilla/servicebook-web.svg?branch=master
+   :target: https://travis-ci.org/mozilla/servicebook-web
+
+
 Small dashboard that lists all QA projects, and displays their swagger
 documentation and everything we have about them.
 
