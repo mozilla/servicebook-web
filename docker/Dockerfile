@@ -6,6 +6,8 @@ RUN apt-get update
 RUN apt-get install git -y
 RUN apt-get install build-essential -y
 RUN apt-get install nginx supervisor -y
+# for debugging within the docker container
+RUN apt-get install vim curl -y
 RUN rm -rf /var/lib/apt/lists/*
 
 RUN addgroup --gid 10001 app
@@ -18,6 +20,7 @@ COPY nginx.conf /etc/nginx/sites-available/default
 COPY global-nginx.conf /etc/nginx/nginx.conf
 
 COPY supervisor.conf /etc/supervisor/conf.d/
+RUN servicebook-import --sqluri sqlite:////app/projects.db
 
 ADD . /app
 EXPOSE 80
