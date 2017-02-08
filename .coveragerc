@@ -1,0 +1,5 @@
+[run]
+source = serviceweb
+
+[report]
+omit = serviceweb/tests/*
