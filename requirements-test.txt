@@ -4,3 +4,6 @@ flake8==3.0.4
 tox==2.3.1
 flask-webtest==0.0.7
 requests-mock
+-e git+https://github.com/mozilla/servicebook.git#egg=servicebook
+-e git+https://github.com/jfinkels/flask-restless.git#egg=flask-restless
+-e git+https://github.com/tarekziade/flask-restless-swagger.git#egg=flask-restless-swagger

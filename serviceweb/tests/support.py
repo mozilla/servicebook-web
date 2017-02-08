@@ -1,8 +1,14 @@
+import warnings
+import shutil
 import os
 from unittest import TestCase
+import multiprocessing
 from contextlib import contextmanager
 import json
 import re
+import time
+from http.client import HTTPConnection
+import signal
 
 import yaml
 import requests_mock
@@ -12,15 +18,74 @@ from serviceweb.server import create_app
 
 _ONE_TIME = None
 _INI = os.path.join(os.path.dirname(__file__), 'serviceweb.ini')
+_BOOK = os.path.join(os.path.dirname(__file__), 'servicebook.ini')
+_DB = os.path.join(os.path.dirname(__file__), 'projects.db')
+
+
+def run_server(port=8888):
+    """Running in a subprocess to avoid any interference
+    """
+    def _run():
+        import os
+        from servicebook.server import create_app
+        import socketserver
+        import sys
+        from io import StringIO
+        import warnings
+
+        # might want to drop it in a file
+        sys.stderr = sys.stdout = StringIO()
+        socketserver.TCPServer.allow_reuse_address = True
+
+        test_dir = os.path.dirname(_BOOK)
+        os.chdir(test_dir)
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            app = create_app(_BOOK)
+            try:
+                app.run(port=port, debug=False)
+            except KeyboardInterrupt:
+                pass
+
+    p = multiprocessing.Process(target=_run)
+    p.start()
+    start = time.time()
+    connected = False
+
+    while time.time() - start < 5 and not connected:
+        try:
+            conn = HTTPConnection('localhost', 8888)
+            conn.request("GET", "/api/")
+            conn.getresponse()
+            connected = True
+        except Exception:
+            time.sleep(.1)
+
+    if not connected:
+        os.kill(p.pid, signal.SIGTERM)
+        p.join(timeout=1.)
+        raise OSError('Could not connect to coserver')
+    return p
 
 
 class BaseTest(TestCase):
     def setUp(self):
         super(BaseTest, self).setUp()
-        global _ONE_TIME
-        if _ONE_TIME is None:
-            _ONE_TIME = TestApp(create_app(_INI))
-        self.app = _ONE_TIME
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            global _ONE_TIME
+            if _ONE_TIME is None:
+                _ONE_TIME = TestApp(create_app(_INI))
+            shutil.copyfile(_DB, _DB + '.saved')
+            self._coserver = run_server(8888)
+            self.app = _ONE_TIME
+
+    def tearDown(self):
+        os.kill(self._coserver.pid, signal.SIGTERM)
+        shutil.copyfile(_DB + '.saved', _DB)
+        self._coserver.join(timeout=1.)
+        super(BaseTest, self).tearDown()
 
     @contextmanager
     def logged_in(self, extra_mocks=None):

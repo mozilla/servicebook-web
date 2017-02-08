@@ -1,7 +1,5 @@
-from flask import render_template
-from flask import Blueprint
-from flask import g
-
+from restjson.client import ResourceError
+from flask import render_template, Blueprint, g, redirect, abort
 from serviceweb.auth import only_for_editors
 
 
@@ -10,7 +8,11 @@ users_bp = Blueprint('users', __name__)
 
 @users_bp.route("/user/<int:user_id>")
 def user_view(user_id):
-    user = g.db.get_entry('user', user_id)
+    try:
+        user = g.db.get_entry('user', user_id)
+    except ResourceError:
+        return abort(404)
+
     mozillians = users_bp.app.extensions['mozillians']
 
     if user['mozillians_login']:
@@ -29,6 +31,17 @@ def user_view(user_id):
     backlink = '/'
     return render_template('user.html', projects=projects, user=user,
                            backlink=backlink, mozillian=mozillian)
+
+
+@users_bp.route("/user/<int:user_id>/delete")
+@only_for_editors
+def users_delete(user_id):
+    try:
+        g.db.get_entry('user', user_id)
+    except ResourceError:
+        return abort(404)
+    g.db.delete_entry('user', user_id)
+    return redirect('/user')
 
 
 @users_bp.route("/user")

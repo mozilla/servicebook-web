@@ -22,7 +22,8 @@ class DynamicSelectField(fields.SelectField):
     def post_validate(self, valuelist, stopped):
         if self.data == -1:
             self.data = None
-        return super(DynamicSelectField, self).post_validate(valuelist, stopped)
+        return super(DynamicSelectField, self).post_validate(valuelist,
+                                                             stopped)
 
 
 _BUTTON = """\

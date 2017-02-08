@@ -46,3 +46,10 @@ class EditTest(BaseTest):
             tds = users.html.find_all('td')
             self.assertEqual(len([td.text for td in tds
                                   if td.text == old_name]), 1)
+
+    def test_delete_user(self):
+        with self.logged_in():
+            deleted = self.app.get('/user/1/delete')
+            self.assertEqual(deleted.status_code, 302)
+            self.app.get('/user/1/delete', status=404)
+            self.app.get('/user/1', status=404)
