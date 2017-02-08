@@ -21,6 +21,7 @@ COPY global-nginx.conf /etc/nginx/nginx.conf
 
 COPY supervisor.conf /etc/supervisor/conf.d/
 RUN servicebook-import --sqluri sqlite:////app/projects.db
+RUN chmod 666 /app/projects.db
 
 ADD . /app
 EXPOSE 80
