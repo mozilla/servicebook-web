@@ -4,8 +4,9 @@
 {% set json = '/groups/' + group.name + '.json' %}
 
 {% block page %}
+  {% if group.lead %}
   <p>Group lead : <a href="/user/{{group.lead.id}}">{{group.lead|fullname}}</a></p>
-
+  {% endif %}
   <p>List of all active projects for <em>{{group.name}}</em></p>
   {% include '_projectlist.html' %}
 
