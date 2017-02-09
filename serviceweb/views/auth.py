@@ -2,9 +2,15 @@ from flask import Blueprint
 from flask import request, redirect, session, url_for, flash
 from flask import render_template
 
-from serviceweb.auth import github2dbuser
+from serviceweb.auth import github2dbuser, NotRegisteredError
+
 
 auth = Blueprint('auth', __name__)
+
+
+@auth.route('/registration')
+def registration():
+    return render_template('registration.html'), 401
 
 
 @auth.route('/login')
@@ -45,7 +51,10 @@ def authorized():
 
     authorization = github.get_auth_session(data=data)
     github_user = authorization.get('user').json()
-    db_user = github2dbuser(github_user)
+    try:
+        db_user = github2dbuser(github_user)
+    except NotRegisteredError:
+        return redirect('/registration')
 
     session['token'] = authorization.access_token
     session['user_id'] = db_user['id']

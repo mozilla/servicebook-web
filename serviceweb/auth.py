@@ -4,6 +4,10 @@ from rauth.service import OAuth2Service
 from flask import session, abort, g
 
 
+class NotRegisteredError(Exception):
+    pass
+
+
 def GithubAuth(app):
     github = OAuth2Service(**app.config['oauth'])
     if not hasattr(app, 'extensions'):
@@ -23,9 +27,11 @@ def github2dbuser(github_user):
     if len(res) == 1:
         db_user = res[0]
     elif len(res) > 1:
-
         raise ValueError(res)
     else:
+        # not creating entries automatically for now
+        raise NotRegisteredError(login)
+
         # creating an entry
         name = github_user['name'].split(' ', 1)
         if len(name) == 2:
