@@ -83,9 +83,13 @@ def project(project_id):
     project_info = None
 
     if swagger is not None:
-        res = requests.get(swagger)
-        if res.status_code == 200:
-            project_info = yaml.load(res.content)['info']
+        try:
+            res = requests.get(swagger)
+            if res.status_code == 200:
+                project_info = yaml.load(res.content)['info']
+        except Exception:
+            # XXX log it
+            pass
 
     backlink = '/'
     edit = '/project/%d/edit' % project_id
