@@ -47,6 +47,8 @@ def display_entry(table, entry):
         if entry['name'] is not None:
             return '%(name)s -- %(url)s' % entry
         return entry['url']
+    if table == 'testrail':
+        return '%(project_id)s @ %(test_rail_server)s' % entry
     if table == 'language':
         name = entry['name']
         version = entry.get('version')
@@ -82,6 +84,22 @@ class ProjectTestForm(BaseForm):
 _FORMS['project_test'] = ProjectTestForm
 
 
+class JenkinsJobForm(BaseForm):
+    name = fields.StringField()
+    jenkins_server = fields.StringField()
+
+
+_FORMS['jenkins_job'] = JenkinsJobForm
+
+
+class TestRailForm(BaseForm):
+    project_id = fields.IntegerField()
+    test_rail_server = fields.StringField()
+
+
+_FORMS['testrail'] = TestRailForm
+
+
 class TagForm(BaseForm):
     name = fields.StringField()
 
@@ -103,7 +121,9 @@ class ProjectForm(BaseForm):
     languages = JsonListField('languages', checkbox_label=display_entry)
     tests = JsonListField('tests', checkbox_label=display_entry,
                           table='project_test', relation_field='project_id')
-    jenkins_jobs = JsonListField('jenkins_jobs', relation_field='project_id')
+    jenkins_jobs = JsonListField('jenkins_job', relation_field='project_id')
+    testrail = JsonListField('testrail', relation_field='project_id',
+                             checkbox_label=display_entry)
     deployments = JsonListField('deployments', checkbox_label=display_entry,
                                 relation_field='project_id')
     irc = fields.StringField()
