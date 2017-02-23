@@ -105,6 +105,7 @@ class TagForm(BaseForm):
 
 
 _FORMS['tag'] = TagForm
+_DESC = 'To delete entries, uncheck them and submit the form.'
 
 
 class ProjectForm(BaseForm):
@@ -116,16 +117,22 @@ class ProjectForm(BaseForm):
     #
     repositories = JsonListField('repositories',
                                  checkbox_label=display_entry,
-                                 table='link')
-    tags = JsonListField('tags')
-    languages = JsonListField('languages', checkbox_label=display_entry)
+                                 table='link',
+                                 description=_DESC)
+    tags = JsonListField('tags', description=_DESC)
+    languages = JsonListField('languages', checkbox_label=display_entry,
+                              description=_DESC)
     tests = JsonListField('tests', checkbox_label=display_entry,
-                          table='project_test', relation_field='project_id')
-    jenkins_jobs = JsonListField('jenkins_job', relation_field='project_id')
+                          table='project_test', relation_field='project_id',
+                          description=_DESC)
+    jenkins_jobs = JsonListField('jenkins_job', relation_field='project_id',
+                                 description=_DESC)
     testrail = JsonListField('testrail', relation_field='project_id',
-                             checkbox_label=display_entry)
+                             checkbox_label=display_entry,
+                             description=_DESC)
     deployments = JsonListField('deployments', checkbox_label=display_entry,
-                                relation_field='project_id')
+                                relation_field='project_id',
+                                description=_DESC)
     irc = fields.StringField()
     bz_product = fields.StringField()
     bz_component = fields.StringField()
