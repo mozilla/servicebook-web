@@ -1,6 +1,9 @@
 from restjson.client import ResourceError
 from flask import render_template, Blueprint, g, redirect, abort
+
 from serviceweb.auth import only_for_editors
+from serviceweb.forms import UserForm
+from serviceweb.util import add_view
 
 
 users_bp = Blueprint('users', __name__)
@@ -49,3 +52,9 @@ def users_delete(user_id):
 def users_view():
     users = g.db.get_entries('user')
     return render_template('users.html', users=users)
+
+
+@users_bp.route("/adduser", methods=["GET", "POST"])
+@only_for_editors
+def add_user():
+    return add_view(UserForm, 'user', 'Add a new user', '/adduser',  '/user')

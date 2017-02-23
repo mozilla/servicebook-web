@@ -53,3 +53,14 @@ class EditTest(BaseTest):
             self.assertEqual(deleted.status_code, 302)
             self.app.get('/user/1/delete', status=404)
             self.app.get('/user/1', status=404)
+
+    def test_add_user(self):
+        with self.logged_in():
+            user = self.app.get('/adduser')
+            form = user.forms[0]
+            form['firstname'] = 'Joe'
+            form['lastname'] = 'Doe'
+            res = form.submit().follow()
+
+            # let's check it changed
+            self.assertTrue(b'Joe' in res.body)

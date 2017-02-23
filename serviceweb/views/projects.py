@@ -8,6 +8,7 @@ from flask import request, redirect, g
 
 from serviceweb.auth import only_for_editors
 from serviceweb.forms import ProjectForm, DeploymentForm
+from serviceweb.util import add_view
 from restjson.client import objdict
 
 
@@ -22,16 +23,8 @@ _BUGZILLA = ('https://bugzilla.mozilla.org/rest/bug?' + _STATUSES +
 @projects.route("/project/", methods=['GET', 'POST'])
 @only_for_editors
 def add_project():
-    form = ProjectForm(request.form)
-    if request.method == 'POST' and form.validate():
-        project = objdict()
-        form.populate_obj(project)
-        project_id = g.db.create_entry('project', project)['id']
-        return redirect('/project/%d' % project_id)
-
-    action = 'Add a new project'
-    return render_template("edit.html", form=form, action=action,
-                           form_action="/project/")
+    return add_view(ProjectForm, 'project', 'Add a new project',
+                    '/project', '/project')
 
 
 def get_last_builds(job_name):
