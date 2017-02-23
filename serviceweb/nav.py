@@ -27,7 +27,7 @@ def build_nav():
                 View('Projects', 'frontend.info')]
 
     if user is None:
-        link = Link('Github Login', '/login')
+        link = Link('GitHub Login', '/login')
     else:
         elements.append(View('Manage Users', 'users.users_view'))
         name = fullname(user)

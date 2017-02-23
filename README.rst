@@ -8,11 +8,11 @@ Service Book
    :target: https://travis-ci.org/mozilla/servicebook-web
 
 
-Small dashboard that lists all QA projects, and displays their swagger
+Small dashboard that lists all QA projects, and displays their Swagger
 documentation and everything we have about them.
 
 
-Run with docker
+Run with Docker
 ---------------
 
 There's a full deployment in Docker image in the docker/ directory.
