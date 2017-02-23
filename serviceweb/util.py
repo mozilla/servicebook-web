@@ -1,5 +1,7 @@
 
 def fullname(user):
+    """ Returns the full name of a user.
+    """
     if not user:
         return ''
     firstname = user['firstname'].capitalize()
@@ -8,7 +10,10 @@ def fullname(user):
 
 
 def testing_completion(project):
-    # XXX projects.tests theneck if completed and 8 test
+    """Returns a completion percentage for a project.
+
+    e.g. the percentage of tests that are marked operational
+    """
     num = len(project.tests)
     if num == 0:
         return 0
