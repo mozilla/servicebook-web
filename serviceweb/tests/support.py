@@ -65,8 +65,11 @@ def run_server(port=8888):
             time.sleep(.1)
 
     if not connected:
-        os.kill(p.pid, signal.SIGTERM)
-        p.join(timeout=1.)
+        if not p.is_alive():
+            print("Looks like the process never started")
+        else:
+            os.kill(p.pid, signal.SIGTERM)
+            p.join(timeout=1.)
         raise OSError('Could not connect to coserver')
     else:
         if not p.is_alive():
