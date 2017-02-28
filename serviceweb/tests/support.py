@@ -35,20 +35,29 @@ def run_server(port=8888):
         from io import StringIO
         import warnings
 
-        # might want to drop it in a file
         sys.stderr = sys.stdout = StringIO()
         socketserver.TCPServer.allow_reuse_address = True
 
         test_dir = os.path.dirname(_BOOK)
         os.chdir(test_dir)
 
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore")
-            app = app(_BOOK)
-            try:
-                app.run(port=port, debug=False)
-            except KeyboardInterrupt:
-                pass
+        try:
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                app = app(_BOOK)
+                try:
+                    app.run(port=port, debug=False)
+                except KeyboardInterrupt:
+                    pass
+        finally:
+            sys.stderr.seek(0)
+            sys.stdout.seek(0)
+
+            with open("coserver.stdout", 'w') as f:
+                f.write(sys.stdout.read())
+
+            with open("coserver.stderr", 'w') as f:
+                f.write(sys.stderr.read())
 
     p = multiprocessing.Process(target=_run)
     p.start()
@@ -66,7 +75,12 @@ def run_server(port=8888):
 
     if not connected:
         if not p.is_alive():
-            print("Looks like the process never started")
+            print("Looks like the process is born-dead")
+            with open("coserver.stdout") as f:
+                print(f.read())
+
+            with open("coserver.stderr") as f:
+                print(f.read())
         else:
             os.kill(p.pid, signal.SIGTERM)
             p.join(timeout=1.)
