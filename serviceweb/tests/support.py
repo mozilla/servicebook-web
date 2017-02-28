@@ -32,32 +32,17 @@ def run_server(port=8888):
         from servicebook.server import create_app as app
         import socketserver
         import sys
-        from io import StringIO
-        import warnings
 
-        sys.stderr = sys.stdout = StringIO()
         socketserver.TCPServer.allow_reuse_address = True
-
         test_dir = os.path.dirname(_BOOK)
         os.chdir(test_dir)
-
+        sys.stderr = open("coserver.stderr", "w")
+        sys.stdout = open("coserver.stdout", "w")
+        app = app(_BOOK)
         try:
-            with warnings.catch_warnings():
-                warnings.simplefilter("ignore")
-                app = app(_BOOK)
-                try:
-                    app.run(port=port, debug=False)
-                except KeyboardInterrupt:
-                    pass
-        finally:
-            sys.stderr.seek(0)
-            sys.stdout.seek(0)
-
-            with open("coserver.stdout", 'w') as f:
-                f.write(sys.stdout.read())
-
-            with open("coserver.stderr", 'w') as f:
-                f.write(sys.stderr.read())
+            app.run(port=port, debug=False)
+        except KeyboardInterrupt:
+            pass
 
     p = multiprocessing.Process(target=_run)
     p.start()
@@ -76,10 +61,11 @@ def run_server(port=8888):
     if not connected:
         if not p.is_alive():
             print("Looks like the process is born-dead")
-            with open("coserver.stdout") as f:
+            test_dir = os.path.dirname(_BOOK)
+            with open(os.path.join(test_dir, "coserver.stdout")) as f:
                 print(f.read())
 
-            with open("coserver.stderr") as f:
+            with open(os.path.join(test_dir, "coserver.stderr")) as f:
                 print(f.read())
         else:
             os.kill(p.pid, signal.SIGTERM)
