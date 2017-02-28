@@ -9,6 +9,8 @@ import re
 import time
 from http.client import HTTPConnection
 import signal
+import sys
+from io import StringIO
 
 import yaml
 import requests_mock
@@ -53,7 +55,7 @@ def run_server(port=8888):
     start = time.time()
     connected = False
 
-    while time.time() - start < 5 and not connected:
+    while time.time() - start < 10 and not connected:
         try:
             conn = HTTPConnection('localhost', 8888)
             conn.request("GET", "/api/")
@@ -84,7 +86,14 @@ class BaseTest(TestCase):
             shutil.copyfile(_DB, _DB + '.saved')
             shutil.copyfile(_BOOK, _BOOK + '.saved')
             try:
-                self._migrate(_DB)
+                old_stdout = sys.stdout
+                old_stderr = sys.stderr
+                sys.stderr = sys.stdout = StringIO()
+                try:
+                    self._migrate(_DB)
+                finally:
+                    sys.stdout = old_stdout
+                    sys.stderr = old_stderr
 
                 with open(_BOOK) as f:
                     new_content = f.read() % {'DB': _DB}
