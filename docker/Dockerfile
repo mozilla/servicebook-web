@@ -20,9 +20,9 @@ COPY nginx.conf /etc/nginx/sites-available/default
 COPY global-nginx.conf /etc/nginx/nginx.conf
 
 COPY supervisor.conf /etc/supervisor/conf.d/
-RUN servicebook-import --sqluri sqlite:////app/projects.db
-RUN chmod 666 /app/projects.db
+COPY version.json /app/version.json
+COPY init_db.py /app/init_db.py
 
 ADD . /app
 EXPOSE 80
-CMD supervisord -n
+CMD python init_db.py; supervisord -n
