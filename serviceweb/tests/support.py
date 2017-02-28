@@ -27,7 +27,7 @@ def run_server(port=8888):
     """
     def _run():
         import os
-        from servicebook.server import create_app
+        from servicebook.server import create_app as app
         import socketserver
         import sys
         from io import StringIO
@@ -42,7 +42,7 @@ def run_server(port=8888):
 
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            app = create_app(_BOOK)
+            app = app(_BOOK)
             try:
                 app.run(port=port, debug=False)
             except KeyboardInterrupt:
@@ -66,26 +66,55 @@ def run_server(port=8888):
         os.kill(p.pid, signal.SIGTERM)
         p.join(timeout=1.)
         raise OSError('Could not connect to coserver')
+    else:
+        if not p.is_alive():
+            raise OSError("There's a ghost coserver")
+
     return p
 
 
 class BaseTest(TestCase):
     def setUp(self):
+        global _ONE_TIME
         super(BaseTest, self).setUp()
+        self.app = self._coserver = None
+
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            global _ONE_TIME
-            if _ONE_TIME is None:
-                _ONE_TIME = TestApp(create_app(_INI))
             shutil.copyfile(_DB, _DB + '.saved')
-            self._coserver = run_server(8888)
-            self.app = _ONE_TIME
+            shutil.copyfile(_BOOK, _BOOK + '.saved')
+            try:
+                self._migrate(_DB)
+
+                with open(_BOOK) as f:
+                    new_content = f.read() % {'DB': _DB}
+                    with open(_BOOK, 'w') as w:
+                        w.write(new_content)
+
+                if _ONE_TIME is None:
+                    _ONE_TIME = TestApp(create_app(_INI))
+
+                self._coserver = run_server(8888)
+                self.app = _ONE_TIME
+            except Exception:
+                self.tearDown()
+                raise
 
     def tearDown(self):
-        os.kill(self._coserver.pid, signal.SIGTERM)
+        if self._coserver is not None:
+            os.kill(self._coserver.pid, signal.SIGTERM)
+            self._coserver.join(timeout=1.)
+
         shutil.copyfile(_DB + '.saved', _DB)
-        self._coserver.join(timeout=1.)
+        os.remove(_DB + '.saved')
+        shutil.copyfile(_BOOK + '.saved', _BOOK)
+        os.remove(_BOOK + '.saved')
         super(BaseTest, self).tearDown()
+
+    def _migrate(self, dbfile):
+        sqlite = 'sqlite:///' + dbfile
+        from servicebook.db import migrate_db
+        migrate_db(['--sqluri', sqlite])
 
     @contextmanager
     def logged_in(self, extra_mocks=None):

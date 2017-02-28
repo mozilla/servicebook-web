@@ -28,6 +28,12 @@ def get_users():
     return res
 
 
+def get_teams():
+    # XXX this call should be cached
+    entries = g.db.get_entries('team', sort='name')
+    return [(entry.id, entry.name) for entry in entries]
+
+
 def get_groups():
     # XXX this call should be cached
     entries = g.db.get_entries('group', sort='name')
@@ -79,6 +85,8 @@ class ProjectTestForm(BaseForm):
     name = fields.StringField()
     url = fields.StringField()
     operational = fields.BooleanField()
+    jenkins_pipeline = fields.BooleanField()
+    public = fields.BooleanField()
 
 
 _FORMS['project_test'] = ProjectTestForm
@@ -87,6 +95,7 @@ _FORMS['project_test'] = ProjectTestForm
 class JenkinsJobForm(BaseForm):
     name = fields.StringField()
     jenkins_server = fields.StringField()
+    public = fields.BooleanField()
 
 
 _FORMS['jenkins_job'] = JenkinsJobForm
@@ -95,6 +104,7 @@ _FORMS['jenkins_job'] = JenkinsJobForm
 class TestRailForm(BaseForm):
     project_id = fields.IntegerField()
     test_rail_server = fields.StringField()
+    public = fields.BooleanField()
 
 
 _FORMS['testrail'] = TestRailForm
@@ -113,6 +123,7 @@ class ProjectForm(BaseForm):
     homepage = fields.StringField()
     description = fields.TextAreaField()
     long_description = LargeTextAreaField(description='You can use Markdown.')
+    public = fields.BooleanField()
     # xXXX filter by itermediate table
     #
     repositories = JsonListField('repositories',
@@ -151,6 +162,7 @@ _FORMS['project'] = ProjectForm
 class LinkForm(BaseForm):
     url = fields.StringField()
     name = fields.StringField()
+    public = fields.BooleanField()
 
 
 _FORMS['link'] = LinkForm
@@ -159,6 +171,7 @@ _FORMS['link'] = LinkForm
 class DeploymentForm(BaseForm):
     name = fields.StringField()
     endpoint = fields.StringField()
+    public = fields.BooleanField()
 
 
 _FORMS['deployment'] = DeploymentForm
@@ -173,6 +186,8 @@ class UserForm(BaseForm):
     email = fields.StringField()
     irc = fields.StringField()
     mozillians_login = fields.StringField()
+    team_id = DynField('team', choices=get_teams)
+    secondary_team_id = DynField('secondary_team', choices=get_teams)
 
     def label(self, entry):
         return fullname(entry)
