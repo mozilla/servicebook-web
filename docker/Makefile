@@ -1,6 +1,6 @@
 .PHONY: build run
 
-SERVICEBOOK = http://192.168.1.101:5001/api
+SERVICEBOOK = http://192.168.1.101:5001/api/
 
 build:
 	docker build -t serviceweb/dev:latest .
