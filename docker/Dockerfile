@@ -21,8 +21,7 @@ COPY global-nginx.conf /etc/nginx/nginx.conf
 
 COPY supervisor.conf /etc/supervisor/conf.d/
 COPY version.json /app/version.json
-COPY init_db.py /app/init_db.py
 
 ADD . /app
 EXPOSE 80
-CMD python init_db.py; supervisord -n
+CMD supervisord -n

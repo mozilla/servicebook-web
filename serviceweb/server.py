@@ -42,8 +42,12 @@ def create_app(ini_file=DEFAULT_INI_FILE):
         app.register_blueprint(bp)
         bp.app = app
 
-    app.db = Client(app.config['common']['service_book'])
-    app.search = Search(app.config['common']['service_book'])
+    service_book = os.environ.get('SERVICEBOOK', None)
+    if service_book is None:
+        service_book = app.config['common']['service_book']
+
+    app.db = Client(service_book)
+    app.search = Search(service_book)
     app.register_error_handler(401, unauthorized_view)
     nav.init_app(app)
 

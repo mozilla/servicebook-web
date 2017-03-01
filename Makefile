@@ -24,9 +24,3 @@ test_dependencies:
 
 test: build test_dependencies
 	$(BIN)/tox
-
-docker-build:
-	docker build -t serviceweb/dev:latest .
-
-docker-run:
-	docker run -i -p 5000:5000 serviceweb/dev:latest
