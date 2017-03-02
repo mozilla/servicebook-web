@@ -26,23 +26,29 @@
           <div class="list-group-item {% if test.operational %}list-group-item-success{% else %}list-group-item-danger{% endif %}">
            <strong>{{test.name}}</strong>
            <a href="{{test.url}}">{{test.url}}</a>
-        </div>
+          {% if not test.public %}
+          <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+          {% endif %}
+       </div>
         {% endfor %}
      </div>
  </div>
- <div class="col-md-2">
+ <div class="col-md-3">
     {% if jenkins_builds %}
     <h2><img src="/static/jenkins.png"/>&nbsp;Jenkins</h2>
     <ul class="list-unstyled">
         {% for build in jenkins_builds %}
-
         <li>
+        {% if not build.public %}
+          <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+        {% endif %}
             {% if build['result'] == 'SUCCESS' %}
               <img src="/static/jenkins_success.png"/>
             {% else %}
               <img src="/static/jenkins_failure.png"/>
             {% endif %}
             <a href="{{build['url']}}">{{build['fullDisplayName']}}</a>
+    
        </li>
         {% endfor %}
     </ul>
@@ -60,13 +66,16 @@
     {% endif %}
 
   </div>
-  <div class="col-md-5">
+  <div class="col-md-4">
    <h2>Project Info</h2>
   <ul class="list-group">
       <li class="list-group-item"><em>Homepage</em> <a href="{{project.homepage}}">{{project.homepage}}</a></li>
       {% for repo in project.repositories %}
       <li class="list-group-item"><em>Repository #{{loop.index}}</em>
         <a href="{{repo.url}}">{{repo.url}}</a>
+        {% if not repo.public %}
+          <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+        {% endif %}
       </li>
       {% endfor %}
      {% for role in ('qa_primary', 'qa_secondary', 'op_primary', 'op_secondary', 'dev_primary', 'dev_secondary') %}
@@ -114,6 +123,9 @@
   <div class="panel panel-primary">
   <div class="panel-heading">
   <h2 class="panel-title">{{deployment.name}}  <span class="badge">v0.3.0</span>
+  {% if not deployment.public %}
+    <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+  {% endif %}
   </h2>
   </div>
   <div class="panel-body">

@@ -17,7 +17,12 @@
     <tbody>
     {% for project in projects %}
       <tr>
-        <td><a href="/project/{{project.id}}">{{project.name}}</a></td>
+        <td>
+          {% if not project.public %}
+          <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+          {% endif %}
+          <a href="/project/{{project.id}}">{{project.name}}</a>
+        </td>
         <td>
           {% if project.qa_primary_id %}
             <a

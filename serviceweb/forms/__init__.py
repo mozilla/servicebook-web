@@ -18,14 +18,37 @@ class BaseForm(Form):
         return entry['name']
 
 
-def get_users():
-    # only mozqa folks can be primary/secondary/group lead
+def _get_users(team=None):
+    if team is not None:
+        filters = [{'name': 'name', 'op': 'eq', 'val': team}]
+        team_id = g.db.get_entries('team', filters=filters)[0]['id']
+        filter1 = {'name': 'team_id', 'op': 'eq', 'val': team_id}
+        filter2 = {'name': 'secondary_team_id', 'op': 'eq', 'val': team_id}
+        filters = [{"or": [filter1, filter2]}]
+    else:
+        filters = [{'name': 'mozqa', 'op': 'eq', 'val': True}]
+
     # XXX this call should be cached
-    filters = [{'name': 'mozqa', 'op': 'eq', 'val': True}]
     entries = g.db.get_entries('user', filters=filters, sort='firstname')
     res = [(entry.id, fullname(entry)) for entry in entries]
     res.insert(0, (-1, 'N/A'))
     return res
+
+
+def get_devs():
+    return _get_users('Dev')
+
+
+def get_qa():
+    return _get_users('QA')
+
+
+def get_ops():
+    return _get_users('OPS')
+
+
+def get_users():
+    return _get_users()
 
 
 def get_teams():
@@ -148,12 +171,12 @@ class ProjectForm(BaseForm):
     bz_product = fields.StringField()
     bz_component = fields.StringField()
     qa_group_name = DynField('qa_group', choices=get_groups, coerce=str)
-    qa_primary_id = DynField('qa_primary')
-    qa_secondary_id = DynField('qa_secondary')
-    op_primary_id = DynField('op_primary')
-    op_secondary_id = DynField('op_secondary')
-    dev_primary_id = DynField('dev_primary')
-    dev_secondary_id = DynField('dev_secondary')
+    qa_primary_id = DynField('qa_primary', choices=get_qa)
+    qa_secondary_id = DynField('qa_secondary', choices=get_qa)
+    op_primary_id = DynField('op_primary', choices=get_ops)
+    op_secondary_id = DynField('op_secondary', choices=get_ops)
+    dev_primary_id = DynField('dev_primary', choices=get_devs)
+    dev_secondary_id = DynField('dev_secondary', choices=get_devs)
 
 
 _FORMS['project'] = ProjectForm
