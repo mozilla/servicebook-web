@@ -16,6 +16,7 @@
     </thead>
     <tbody>
     {% for project in projects %}
+    {% if project.public or (not project.public and g.user_in_mozteam) %}
       <tr>
         <td>
           {% if not project.public %}
@@ -80,6 +81,7 @@
       </td>
       <td>{{project.last_modified|humanize}}</td>
       </tr>
+    {% endif %}
     {% endfor %}
     </tbody>
   </table>

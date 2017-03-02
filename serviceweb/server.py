@@ -62,6 +62,15 @@ def create_app(ini_file=DEFAULT_INI_FILE):
         g.db = app.db
         g.search = app.search
         g.user = get_user(app)
+        if g.user is not None:
+            team_id = g.user.get('team_id')
+            secondary_team_id = g.user.get('secondary_team_id')
+            # cache
+            teams = [team.id for team in g.db.get_entries('team')
+                     if team.name in ('OPS', 'QA', 'Dev')]
+            g.user_in_mozteam = team_id in teams or secondary_team_id in teams
+        else:
+            g.user_in_mozteam = False
 
     @app.template_filter('humanize')
     def _humanize(last_modified):
