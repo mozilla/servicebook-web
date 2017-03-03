@@ -1,8 +1,9 @@
 .PHONY: build run
 
-SERVICEBOOK = http://192.168.1.101:5001/api/
+SERVICEBOOK = http://192.168.1.12:5001/api/
 
 build:
+	python3 create_version.py > version.json
 	docker build -t serviceweb/dev:latest .
 
 run:

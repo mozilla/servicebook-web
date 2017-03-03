@@ -1,13 +1,16 @@
 import json
 import os
 import subprocess
+import sys
+
+sys.path.append('..')
 from serviceweb import __version__
 
 
 HERE = os.path.dirname(__file__)
 
 
-with open(os.path.join(HERE, 'serviceweb', 'templates',
+with open(os.path.join(HERE, '..', 'serviceweb', 'templates',
           'version.json')) as f:
     version = json.loads(f.read())
 
