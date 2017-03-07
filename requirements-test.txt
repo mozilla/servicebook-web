@@ -1,8 +1,8 @@
 -r requirements.txt
 
-flake8==3.0.4
-tox==2.3.1
-flask-webtest==0.0.7
+flake8==3.3.0
+tox==2.6.0
+flask-webtest==0.0.8
 requests-mock
 -e git+https://github.com/mozilla/servicebook.git#egg=servicebook
 -e git+https://github.com/jfinkels/flask-restless.git#egg=flask-restless
