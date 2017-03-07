@@ -6,6 +6,6 @@ python: 3.5
 install:
   - pip install tox
 script: tox -e $TOX_ENV
-after_success: 
+after_success:
   - pip install coveralls
-  - python {toxinidir}/run_coveralls.py
+  - if [[ "${TOX_ENV}" == "py35" ]]; then coveralls; fi
