@@ -8,4 +8,4 @@ install:
 script: tox -e $TOX_ENV
 after_success: 
   - pip install coveralls
-  - coveralls
+  - python {toxinidir}/run_coveralls.py
