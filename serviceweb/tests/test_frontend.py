@@ -36,7 +36,31 @@ class FrontEndTest(BaseTest):
                 break
 
         karl = r.click(index=index)
+        karl_url = karl.context['request'].url
         self.assertTrue('ABSearch' in karl)
+
+        # add karl's mozillians info
+        with self.logged_in():
+            edit = self.app.get(karl_url + '/edit')
+            form = edit.forms[0]
+            form['mozillians_login'] = 'kthiessen'
+            form.submit()
+
+        # let's display it again
+        moz_matcher = re.compile('.*mozillians.*')
+        moz_resp = {'results': [{'_url': 'htts://mozillians.yeah/'}],
+                    'ircname': {'value': 'yuuu'},
+                    'title': {'value': 'ok'},
+                    'photo': {'300x300': 'wtaeva'},
+                    'timezone': {'value': 'HY'},
+                    'country': {'value': 'mars'},
+                    'bio': {'value': 'me myself and i'}}
+
+        with requests_mock.Mocker(real_http=True) as m:
+            m.get(moz_matcher, text=json.dumps(moz_resp))
+            res = self.app.get(karl_url)
+
+        self.assertTrue('yuuu' in res)
 
     def test_browsing_group(self):
         custom = self.app.get('/groups/Customization')
