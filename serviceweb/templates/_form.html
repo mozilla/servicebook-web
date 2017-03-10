@@ -1,6 +1,10 @@
 <form action="{{form_action}}" method="POST">
   <input type="hidden" name="from_" value="{{from_}}"></input>
   <input type="hidden" name="bust_cache" value="{{bust_cache}}"></input>
+  {{ form.csrf_token }}
+  {% if form.csrf_token.errors %}
+      <div class="warning">You have submitted an invalid CSRF token</div>
+  {% endif %}
 
  {% for field in form %}
    {% if field.errors %}

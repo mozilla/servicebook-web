@@ -1,6 +1,10 @@
 # XXX doing too much work here, needs to simplify form gen..
+from datetime import timedelta
+
 from wtforms import Form, fields
-from flask import g
+from wtforms.csrf.session import SessionCSRF
+
+from flask import g, session, current_app
 from serviceweb.util import fullname
 from serviceweb.forms.customfields import (DynamicSelectField, JsonListField,
                                            LargeTextAreaField)
@@ -14,6 +18,20 @@ def get_form(name):
 
 
 class BaseForm(Form):
+    class Meta:
+        csrf = True
+        csrf_class = SessionCSRF
+        csrf_time_limit = timedelta(minutes=20)
+
+        @property
+        def csrf_secret(self):
+            key = current_app.config['CSRF_SECRET_KEY']
+            return bytes(key, 'ascii')
+
+        @property
+        def csrf_context(self):
+            return session
+
     def label(self, entry):
         return entry['name']
 
