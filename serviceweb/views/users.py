@@ -1,9 +1,9 @@
 from restjson.client import ResourceError
-from flask import render_template, Blueprint, g, redirect, abort
+from flask import render_template, Blueprint, g, abort
 
 from serviceweb.auth import only_for_editors
 from serviceweb.forms import UserForm
-from serviceweb.util import add_view
+from serviceweb.util import add_view, safe_redirect
 
 
 users_bp = Blueprint('users', __name__)
@@ -44,7 +44,7 @@ def users_delete(user_id):
     except ResourceError:
         return abort(404)
     g.db.delete_entry('user', user_id)
-    return redirect('/user')
+    return safe_redirect('/user')
 
 
 @users_bp.route("/user")

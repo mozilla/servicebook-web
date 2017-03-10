@@ -1,8 +1,9 @@
 from flask import Blueprint
-from flask import request, redirect, session, url_for, flash
+from flask import request, session, url_for, flash
 from flask import render_template
 
 from serviceweb.auth import github2dbuser, NotRegisteredError
+from serviceweb.util import safe_redirect
 
 
 auth = Blueprint('auth', __name__)
@@ -21,7 +22,7 @@ def login():
                     or request.referrer or None, _external=True))
     # More scopes http://developer.github.com/v3/oauth/#scopes
     params = {'redirect_uri': redirect_uri, 'scope': 'user:email'}
-    return redirect(github.get_authorize_url(**params))
+    return safe_redirect(github.get_authorize_url(**params))
 
 
 @auth.route('/logout')
@@ -30,7 +31,7 @@ def logout():
         if field in session:
             del session[field]
     flash('Logged out')
-    return redirect('/')
+    return safe_redirect('/')
 
 
 @auth.route('/github/callback')
@@ -38,7 +39,7 @@ def authorized():
     # check to make sure the user authorized the request
     if 'code' not in request.args:
         flash('You did not authorize the request')
-        return redirect('/')
+        return safe_redirect('/')
 
     github = auth.app.extensions['github']
 
@@ -54,14 +55,14 @@ def authorized():
     try:
         db_user = github2dbuser(github_user)
     except NotRegisteredError:
-        return redirect('/registration')
+        return safe_redirect('/registration')
 
     session['token'] = authorization.access_token
     session['user_id'] = db_user['id']
     # cache busting when user data changes?
     session['user'] = db_user
     flash('Logged in as ' + str(db_user))
-    return redirect('/')
+    return safe_redirect('/')
 
 
 def unauthorized_view(error):

@@ -1,9 +1,11 @@
 from flask import Blueprint
+from restjson.client import objdict
+from flask import request, g
+from flask import render_template
+
 from serviceweb.auth import only_for_editors
 from serviceweb.forms import get_form
-from restjson.client import objdict
-from flask import request, redirect, g
-from flask import render_template
+from serviceweb.util import safe_redirect
 
 
 edit = Blueprint('edit', __name__)
@@ -28,7 +30,7 @@ def edit_table(table_name, entry_id):
         from_ = request.form.get('from_', from_)
         if bust_cache:
             from_ += '?bust_cache=1'
-        return redirect(from_)
+        return safe_redirect(from_)
 
     action = 'Edit %r' % form.label(entry)
     backlink = '/%s/%d' % (table_name, entry_id)
@@ -90,7 +92,7 @@ def add_relation(table_name, entry_id, relname, target):
                 g.db.update_entry(table_name, entry)
                 g.db.bust_cache(table_name, entry_id)
 
-        return redirect('/%s/%d/edit' % (table_name, entry_id))
+        return safe_redirect('/%s/%d/edit' % (table_name, entry_id))
 
     return render_template(tmpl, form=form, form_action=action,
                            existing=existing, target=target)

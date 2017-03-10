@@ -4,11 +4,11 @@ import requests
 
 from flask import render_template
 from flask import Blueprint
-from flask import request, redirect, g
+from flask import request, g
 
 from serviceweb.auth import only_for_editors
 from serviceweb.forms import ProjectForm, DeploymentForm
-from serviceweb.util import add_view
+from serviceweb.util import add_view, safe_redirect
 from restjson.client import objdict
 
 
@@ -102,7 +102,7 @@ def add_deployment(project_id):
         deployment = objdict({'project_id': project_id})
         form.populate_obj(deployment)
         g.db.create_entry('deployment', deployment)
-        return redirect('/project/%d' % project_id)
+        return safe_redirect('/project/%d' % project_id)
 
     action = 'Add a new deployment for %s' % project.name
     return render_template("edit.html", form=form, action=action,
@@ -114,7 +114,7 @@ def add_deployment(project_id):
 @only_for_editors
 def remove_deployment(project_id, depl_id):
     g.db.delete_entry('deployment', depl_id)
-    return redirect('/project/%d' % (project_id))
+    return safe_redirect('/project/%d' % (project_id))
 
 
 @projects.route("/project/<int:project_id>/deployments/<int:depl_id>/edit",
@@ -128,7 +128,7 @@ def edit_deployment(project_id, depl_id):
     if request.method == 'POST' and form.validate():
         form.populate_obj(depl)
         g.db.update_entry('deployment', depl)
-        return redirect('/project/%d' % (project_id))
+        return safe_redirect('/project/%d' % (project_id))
 
     form_action = '/project/%d/deployments/%d/edit'
     backlink = '/project/%d' % project_id
