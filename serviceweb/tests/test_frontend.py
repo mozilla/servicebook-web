@@ -10,6 +10,13 @@ from serviceweb.tests.support import BaseTest
 
 class FrontEndTest(BaseTest):
 
+    def test_home(self):
+        res = self.app.get('/')
+        self.assertTrue(res.status_code, 200)
+
+        res = self.app.get('/?search=absearch')
+        self.assertTrue(res.status_code, 200)
+
     def test_browsing_project(self):
         r = self.app.get('/info')
         first_proj_link = r.html.findAll('a')[3]['href']
