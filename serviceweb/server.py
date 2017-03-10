@@ -2,7 +2,7 @@ import time
 import os
 import logging.config
 
-from flask import Flask, g
+from flask import Flask, g, render_template
 from flask_bootstrap import Bootstrap
 from flask_iniconfig import INIConfig
 from flaskext.markdown import Markdown
@@ -68,7 +68,9 @@ def create_app(ini_file=DEFAULT_INI_FILE):
             # cache
             teams = [team.id for team in g.db.get_entries('team')
                      if team.name in ('OPS', 'QA', 'Dev')]
-            g.user_in_mozteam = team_id in teams or secondary_team_id in teams
+
+            g.user_in_mozteam = (team_id in teams or secondary_team_id in teams
+                                 or g.user.get('editor'))
         else:
             g.user_in_mozteam = False
 
@@ -96,6 +98,10 @@ def create_app(ini_file=DEFAULT_INI_FILE):
     @app.template_filter('display_entry')
     def display_entry(entry, table):
         return _de(table, entry)
+
+    @app.errorhandler(404)
+    def _404(err):
+        return render_template('_404.html')
 
     logging.config.fileConfig(ini_file)
     return app

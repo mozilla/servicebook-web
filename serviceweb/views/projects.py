@@ -2,9 +2,7 @@ import random
 import yaml
 import requests
 
-from flask import render_template
-from flask import Blueprint
-from flask import request, g
+from flask import render_template, abort, request, g, Blueprint
 
 from serviceweb.auth import only_for_editors
 from serviceweb.forms import ProjectForm, DeploymentForm
@@ -39,6 +37,8 @@ def get_last_builds(job_name):
 @projects.route("/project/<int:project_id>")
 def project(project_id):
     project = g.db.get_entry('project', project_id)
+    if not project.public and not g.user_in_mozteam:
+        return abort(404)
 
     # scraping jenkins info
     # for job in project['jenkins_jobs']:

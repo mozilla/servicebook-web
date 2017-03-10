@@ -9,6 +9,10 @@ def home():
     search = request.args.get('search')
     if search:
         search_results = g.search(search)['data']
+        if not g.user_in_mozteam:
+            # let's filter out non public projects
+            search_results = [proj for proj in search_results
+                              if proj['public']]
         searched = True
     else:
         search_results = []

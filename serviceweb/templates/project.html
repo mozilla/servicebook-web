@@ -23,13 +23,15 @@
      <h2>Tests</h2>
      <div class="list-group">
         {% for test in project.tests %}
+          {% if test.public or g.user_in_mozteam %}
           <div class="list-group-item {% if test.operational %}list-group-item-success{% else %}list-group-item-danger{% endif %}">
            <strong>{{test.name}}</strong>
            <a href="{{test.url}}">{{test.url}}</a>
-          {% if not test.public %}
-          <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+           {% if not test.public %}
+            <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+           {% endif %}
+          </div>
           {% endif %}
-       </div>
         {% endfor %}
      </div>
  </div>
@@ -38,6 +40,7 @@
     <h2><img src="/static/jenkins.png"/>&nbsp;Jenkins</h2>
     <ul class="list-unstyled">
         {% for build in jenkins_builds %}
+        {% if build.public or g.user_in_mozteam %}
         <li>
         {% if not build.public %}
           <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
@@ -48,8 +51,8 @@
               <img src="/static/jenkins_failure.png"/>
             {% endif %}
             <a href="{{build['url']}}">{{build['fullDisplayName']}}</a>
-    
-       </li>
+        </li>
+        {% endif %}
         {% endfor %}
     </ul>
     {% endif %}
@@ -71,12 +74,14 @@
   <ul class="list-group">
       <li class="list-group-item"><em>Homepage</em> <a href="{{project.homepage}}">{{project.homepage}}</a></li>
       {% for repo in project.repositories %}
+      {% if repo.public or g.user_in_mozteam %}
       <li class="list-group-item"><em>Repository #{{loop.index}}</em>
         <a href="{{repo.url}}">{{repo.url}}</a>
         {% if not repo.public %}
           <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
         {% endif %}
       </li>
+      {% endif %}
       {% endfor %}
      {% for role in ('qa_primary', 'qa_secondary', 'op_primary', 'op_secondary', 'dev_primary', 'dev_secondary') %}
        {% if role in project %}
@@ -120,6 +125,8 @@
   {% endif %}
 
   {% for deployment in project.deployments %}
+  {% if deployment.public or g.user_in_mozteam %}
+
   <div class="panel panel-primary">
   <div class="panel-heading">
   <h2 class="panel-title">{{deployment.name}}  <span class="badge">v0.3.0</span>
@@ -148,7 +155,7 @@
     </div>
   </div>
 </div>
-
+  {% endif %}
   {% endfor %}
 </div>
 {% endblock %}
