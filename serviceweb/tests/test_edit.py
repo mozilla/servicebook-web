@@ -66,3 +66,18 @@ class EditTest(BaseTest):
 
             # let's check it changed
             self.assertTrue(b'Joe' in res.body)
+
+    def test_add_relation(self):
+        with self.logged_in():
+            url = ('/project/1/add_relation/tests/project_test?'
+                   'inline=1&relation=project_id')
+
+            rel = self.app.get(url)
+            new_rel = rel.forms[1]
+            new_rel['name'] = 'blah'
+            next_step = new_rel.submit()
+            self.assertEqual(next_step.location,
+                             'http://localhost:80/project/1/edit')
+
+            # let's check it changed
+            self.assertTrue(b'blah' in self.app.get('/project/1').body)
