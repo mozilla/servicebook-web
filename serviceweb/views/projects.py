@@ -43,7 +43,7 @@ def project(project_id):
     # scraping jenkins info
     # for job in project['jenkins_jobs']:
     #    builds.extend(get_last_builds(job['id']))
-    builds = get_last_builds('blah')
+    builds = None    # get_last_builds('blah')
 
     # scraping bugzilla info
     if project['bz_product']:
