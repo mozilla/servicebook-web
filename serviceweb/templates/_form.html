@@ -1,4 +1,4 @@
-<form action="{{form_action}}" method="POST">
+<form id="{{form_id}}" action="{{form_action}}" method="POST">
   <input type="hidden" name="from_" value="{{from_}}"></input>
   <input type="hidden" name="bust_cache" value="{{bust_cache}}"></input>
   {{ form.csrf_token }}
@@ -13,7 +13,7 @@
     <div class="form-group">
    {% endif %}
 
-   {% if field.type != 'HiddenField' %}
+   {% if field.type not in ('HiddenField', 'CSRFTokenField') %}
      <label for="{{field.id }}">{{field.label.text|translate|capitalize}}</label>
    {% endif %}
 

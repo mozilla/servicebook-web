@@ -10,7 +10,7 @@
     <div class="container">
       {% if existing %}
       <h2>Change selection</h2>
-      <form action="{{form_action}}" method="POST">
+      <form id="subForm2" action="{{form_action}}" method="POST">
 
         <ul class="checkbox" id="tags">
           {% for entry in existing %}
@@ -25,9 +25,11 @@
           <span class="glyphicon glyphicon-plus" aria-hidden="true">
           </span> Change
         </button>
+      </form>
       {% endif %}
       <h2>Add a new entry</h2>
       {% include '_form.html' %}
+
     </div>
   </body>
 </html>

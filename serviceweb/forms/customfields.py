@@ -28,22 +28,30 @@ class DynamicSelectField(fields.SelectField):
 
 _BUTTON = """\
 
-<a href="%s" class="editLink btn btn-default btn-xs" type="button">
-  <span class="glyphicon glyphicon-%s" aria-hidden="true"></span>
-  %s
+<a id="%(id)s" href="%(href)s" class="editLink btn btn-default btn-xs"
+   type="button">
+  <span class="glyphicon glyphicon-%(icon)s" aria-hidden="true"></span>
+  %(label)s
 </a>"""
 
 
 class ExtendableListWidget(widgets.ListWidget):
 
-    def _get_button(self, label="", target='#', icon="pencil"):
-        return _BUTTON % (target, icon, label)
+    def _get_button(self, id_='', label="", target='#', icon="pencil"):
+        return _BUTTON % {'id': id_, 'href': target, 'icon': icon,
+                          'label': label}
 
     def __call__(self, field, **kwargs):
         kwargs.setdefault('id', field.id)
         relation_field = kwargs.pop('relation_field', None)
         from_ = kwargs.pop('from_', "{{request.path}}")
-        html = ['<%s %s>' % (self.html_tag, html_params(**kwargs))]
+        if kwargs.get('ul', True):
+            html = ['<%s %s>' % (self.html_tag, html_params(**kwargs))]
+        else:
+            html = []
+
+        id_ = '%s/%s' % (field.meta.fields_url, field.id)
+        id_ = id_.replace('/', '_')
 
         for subfield in field:
             html.append('<li>')
@@ -53,16 +61,21 @@ class ExtendableListWidget(widgets.ListWidget):
                 html.append('%s %s' % (subfield(), subfield.label))
 
             table, entry_id = field.table, subfield.data
-            target = '/%s/%s/edit?inline=1&bust_cache=1&from_=%s'
+            target = '/%s/%s/edit?inline=1&bust_cache=1&ajax=1&from_=%s'
             target = target % (table, entry_id, from_)
-            html.append(self._get_button('', target))
+            html.append(self._get_button(id_=id_ + '_%s' % entry_id,
+                                         target=target))
             html.append('</li>')
 
-        html.append('</%s>' % self.html_tag)
-        target = 'add_relation/%s/%s?inline=1' % (field.id, field.table)
+        if kwargs.get('ul', True):
+            html.append('</%s>' % self.html_tag)
+        target = 'add_relation/%s/%s?inline=1&ajax=1' % (field.id, field.table)
         if relation_field:
             target += '&relation=%s' % relation_field
-        html.append(self._get_button('Add', target, 'plus'))
+        if kwargs.get('button', True):
+            html.append(self._get_button(id_=id_,
+                                         label='Add/Change', target=target,
+                                         icon='plus'))
         return HTMLString(''.join(html))
 
 

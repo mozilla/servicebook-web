@@ -23,19 +23,70 @@
 <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
 
-function editEntry() {
-}
-
-
 dialog = $('#editForm').dialog({autoOpen: false, modal: true, width: '80%'});
 
 
-$('.editLink').click(function(e) {
-    e.preventDefault();
-    $('#editForm').load(this.href);
-    $('#editForm').dialog('open');
-});
 
+function set_all_links() {
+
+
+$('.editLink').unbind().click(function(e) {
+    e.preventDefault();
+
+    $('#editForm').load(this.href);
+
+    $('#editForm').one('dialogclose', function(event) {
+        var linkId = $(e.target).attr('id');
+        if (!linkId) {
+            linkId = $(e.target).parent().attr('id');
+        }
+        if (linkId) {
+            var parts = linkId.split('_');
+            var selection_id = parts[parts.length-1];
+            if (!$('#' + selection_id).length) {
+                selection_id = parts[parts.length-2];
+            }
+            var url = linkId.replace(/_/g, "/");
+            $('#' + selection_id).load(url, function () {
+              set_all_links();
+            });
+        }
+    });
+
+    $('#editForm').dialog('open');
+
+});
+}
+
+set_all_links();
+
+
+$(document).on('submit', '#subForm', function(e) {
+    e.preventDefault();
+    $.ajax({
+        url: $(this).attr('action'),
+        type: $(this).attr('method'),
+        data: $(this).serialize(),
+        success: function(html) {
+          $('#editForm').dialog('close');
+        }
+    });
+  });
+
+$(document).on('submit', '#subForm2', function(e) {
+    e.preventDefault();
+    var data=  $(this).serialize();
+    data += '&pick=1';
+
+    $.ajax({
+        url: $(this).attr('action'),
+        type: $(this).attr('method'),
+        data: data,
+        success: function(html) {
+          $('#editForm').dialog('close');
+        }
+    });
+  });
 
 </script>
 {% endblock %}
