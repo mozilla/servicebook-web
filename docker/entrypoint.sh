@@ -9,6 +9,10 @@ case "$ARG" in
   "start")
       supervisord -n
       ;;
+  "test")
+    export "SERVICEBOOK=http://localhost:5001/api/"
+    supervisord -n
+    ;;
   "shell"|"admin")
       /bin/bash
       ;;
