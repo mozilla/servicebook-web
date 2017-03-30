@@ -1,5 +1,4 @@
 from .users import users_bp
-from .actions import actions
 from .projects import projects
 from .auth import auth
 from .frontend import frontend
@@ -8,5 +7,5 @@ from .edit import edit
 from .heartbeat import heartbeat
 
 
-blueprints = (users_bp, actions, projects, auth, frontend, groups, edit,
+blueprints = (users_bp, projects, auth, frontend, groups, edit,
               heartbeat)
