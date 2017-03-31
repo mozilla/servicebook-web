@@ -5,7 +5,7 @@ import requests
 from flask import render_template, abort, request, g, Blueprint
 
 from serviceweb.auth import only_for_editors
-from serviceweb.forms import ProjectForm, DeploymentForm
+from serviceweb.forms import NewProjectForm, DeploymentForm
 from serviceweb.util import add_view, safe_redirect
 from restjson.client import objdict
 
@@ -18,10 +18,10 @@ _BUGZILLA = ('https://bugzilla.mozilla.org/rest/bug?' + _STATUSES +
              '&product=%s&component=%s&limit=10')
 
 
-@projects.route("/project/", methods=['GET', 'POST'])
+@projects.route("/project", methods=['GET', 'POST'])
 @only_for_editors
 def add_project():
-    return add_view(ProjectForm, 'project', 'Add a new project',
+    return add_view(NewProjectForm, 'project', 'Add a new project',
                     '/project', '/project')
 
 

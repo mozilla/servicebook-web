@@ -159,14 +159,28 @@ _FORMS['tag'] = TagForm
 _DESC = 'To delete entries, uncheck them and submit the form.'
 
 
-class ProjectForm(BaseForm):
+class NewProjectForm(BaseForm):
     name = fields.StringField()
     homepage = fields.StringField()
     description = fields.TextAreaField()
     long_description = LargeTextAreaField(description='You can use Markdown.')
     public = fields.BooleanField()
-    # xXXX filter by itermediate table
-    #
+    irc = fields.StringField()
+    bz_product = fields.StringField()
+    bz_component = fields.StringField()
+    qa_group_name = DynField('qa_group', choices=get_groups, coerce=str)
+    qa_primary_id = DynField('qa_primary', choices=get_qa)
+    qa_secondary_id = DynField('qa_secondary', choices=get_qa)
+    op_primary_id = DynField('op_primary', choices=get_ops)
+    op_secondary_id = DynField('op_secondary', choices=get_ops)
+    dev_primary_id = DynField('dev_primary', choices=get_devs)
+    dev_secondary_id = DynField('dev_secondary', choices=get_devs)
+
+
+_FORMS['newproject'] = NewProjectForm
+
+
+class ProjectForm(NewProjectForm):
     repositories = JsonListField('repositories',
                                  checkbox_label=display_entry,
                                  table='link',
@@ -185,16 +199,6 @@ class ProjectForm(BaseForm):
     deployments = JsonListField('deployments', checkbox_label=display_entry,
                                 relation_field='project_id',
                                 description=_DESC)
-    irc = fields.StringField()
-    bz_product = fields.StringField()
-    bz_component = fields.StringField()
-    qa_group_name = DynField('qa_group', choices=get_groups, coerce=str)
-    qa_primary_id = DynField('qa_primary', choices=get_qa)
-    qa_secondary_id = DynField('qa_secondary', choices=get_qa)
-    op_primary_id = DynField('op_primary', choices=get_ops)
-    op_secondary_id = DynField('op_secondary', choices=get_ops)
-    dev_primary_id = DynField('dev_primary', choices=get_devs)
-    dev_secondary_id = DynField('dev_secondary', choices=get_devs)
 
 
 _FORMS['project'] = ProjectForm
