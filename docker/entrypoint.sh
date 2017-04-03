@@ -7,11 +7,11 @@ fi
 
 case "$ARG" in
   "start")
-      supervisord -n
+      sleep 3 && supervisord -n
       ;;
   "test")
     export "SERVICEBOOK=http://localhost:5001/api/"
-    supervisord -n
+    sleep 3 && supervisord -n
     ;;
   "shell"|"admin")
       /bin/bash
