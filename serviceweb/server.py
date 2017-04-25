@@ -10,7 +10,7 @@ from flaskext.markdown import Markdown
 from serviceweb.nav import nav
 from serviceweb.search import Search
 from serviceweb.views import blueprints
-from serviceweb.auth import get_user, GithubAuth
+from serviceweb.auth import get_user, OIDConnect
 from serviceweb.views.auth import unauthorized_view
 from serviceweb.mozillians import Mozillians
 from serviceweb.translations import APP_TRANSLATIONS
@@ -33,8 +33,10 @@ def create_app(ini_file=DEFAULT_INI_FILE):
     app.config.from_inifile(ini_file)
     app.secret_key = app.config['common']['secret_key']
 
+    app.config['SERVER_NAME'] = 'localhost:5000'
+
     Bootstrap(app)
-    GithubAuth(app)
+    OIDConnect(app, **app.config['oidc'])
     Mozillians(app)
     Markdown(app)
 

@@ -76,8 +76,7 @@ class EditTest(BaseTest):
             new_rel = rel.forms[1]
             new_rel['name'] = 'blah'
             next_step = new_rel.submit()
-            self.assertEqual(next_step.location,
-                             'http://localhost:80/project/1/edit')
+            self.assertTrue(next_step.location.endswith('/project/1/edit'))
 
             # let's check it changed
             self.assertTrue(b'blah' in self.app.get('/project/1').body)

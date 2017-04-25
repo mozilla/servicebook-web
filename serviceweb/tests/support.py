@@ -11,11 +11,13 @@ from http.client import HTTPConnection
 import signal
 import sys
 from io import StringIO
+import requests
 
 import yaml
 import requests_mock
 from flask_webtest import TestApp
 from serviceweb.server import create_app
+import flask
 
 
 _ONE_TIME = None
@@ -133,14 +135,36 @@ class BaseTest(TestCase):
         if extra_mocks is None:
             extra_mocks = []
 
-        # let's log in
-        self.app.get('/login')
-        # redirects to github, let's fake the callback
+        class _Session(object):
+            def __init__(self, session):
+                self.session = session
+                self._local = {}
+
+            def pop(self, key):
+                if key in self._local:
+                    self._local.pop(key)
+                return self.session.pop(key)
+
+            def __getitem__(self, key):
+                return self.session[key]
+
+            def __setitem__(self, key, item):
+                self.session[key] = item
+                self._local[key] = item
+
+        flask.session = _Session(flask.session)
+
+        # redirects to 0auth, let's fake the callback
         code = 'yeah'
-        github_resp = 'access_token=yup'
-        github_user = {'login': 'tarekziade', 'name': 'Tarek Ziade'}
-        github_matcher = re.compile('github.com/')
-        github_usermatcher = re.compile('https://api.github.com/user')
+        oidc_resp = {'access_token': 'yup', 'token_type': 'xxx'}
+        oidc_user = {'nickname': 'tarekziade',
+                     'login': 'tarekziade', 'name': 'Tarek Ziade'}
+        oidc_auth = {}
+
+        oidc_matcher = re.compile('auth0.com/oauth/token')
+        oidc_usermatcher = re.compile('auth0.com/userinfo')
+        oidc_authmatcher = re.compile('auth0.com/authorize')
+
         bz_matcher = re.compile('.*bugzilla.*')
         bz_resp = {'bugs': []}
         sw_matcher = re.compile('search.stage.mozaws.net.*')
@@ -151,11 +175,22 @@ class BaseTest(TestCase):
 
         headers = {'Content-Type': 'application/json'}
         with requests_mock.Mocker(real_http=True) as m:
-            m.post(github_matcher, text=github_resp)
-            m.get(github_usermatcher, json=github_user)
+            m.post(oidc_matcher, json=oidc_resp, headers=headers)
+            m.post(oidc_usermatcher, json=oidc_user, headers=headers)
+            m.get(oidc_authmatcher, json=oidc_auth, headers=headers)
             m.get(bz_matcher, text=json.dumps(bz_resp))
             m.get(sw_matcher, text=json.dumps(sw_resp))
-            self.app.get('/github/callback?code=%s' % code)
+
+            resp = self.app.get('/login')
+            auth0_url = resp.location
+            resp = requests.get(auth0_url)    # simulated auth0 call
+
+            # now back to our redirect
+            state = flask.session._local['state']
+            resp = self.app.get('/auth0?code=%s&state=%s' % (code, state))
+            resp.follow()     # that calls /login again
+
+            # mocking more things
             for verb, url, text in extra_mocks:
                 m.register_uri(verb, re.compile(url), text=text,
                                headers=headers)

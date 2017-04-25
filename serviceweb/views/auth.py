@@ -1,8 +1,5 @@
-from flask import Blueprint
-from flask import request, session, url_for, flash
-from flask import render_template
-
-from serviceweb.auth import github2dbuser, NotRegisteredError
+from flask import Blueprint, session, flash, render_template
+from serviceweb.auth import oidc2dbuser, NotRegisteredError
 from serviceweb.util import safe_redirect
 
 
@@ -16,52 +13,29 @@ def registration():
 
 @auth.route('/login')
 def login():
-    github = auth.app.extensions['github']
+    if session.get('access_token') is None:
+        session['destination'] = '/login'
+        return auth.app.oidc._authenticate()
 
-    redirect_uri = (url_for('auth.authorized', next=request.args.get('next')
-                    or request.referrer or None, _external=True))
-    # More scopes http://developer.github.com/v3/oauth/#scopes
-    params = {'redirect_uri': redirect_uri, 'scope': 'user:email'}
-    return safe_redirect(github.get_authorize_url(**params))
-
-
-@auth.route('/logout')
-def logout():
-    for field in ('token', 'user_id', 'user'):
-        if field in session:
-            del session[field]
-    flash('Logged out')
-    return safe_redirect('/')
-
-
-@auth.route('/github/callback')
-def authorized():
-    # check to make sure the user authorized the request
-    if 'code' not in request.args:
-        flash('You did not authorize the request')
-        return safe_redirect('/')
-
-    github = auth.app.extensions['github']
-
-    # make a request for the access token credentials using code
-    redirect_uri = url_for('auth.authorized', _external=True)
-
-    data = dict(code=request.args['code'],
-                redirect_uri=redirect_uri,
-                scope='user:email,public_repo')
-
-    authorization = github.get_auth_session(data=data)
-    github_user = authorization.get('user').json()
+    oidc_user = session['userinfo']
     try:
-        db_user = github2dbuser(github_user)
+        db_user = oidc2dbuser(oidc_user)
     except NotRegisteredError:
         return safe_redirect('/registration')
 
-    session['token'] = authorization.access_token
     session['user_id'] = db_user['id']
     # cache busting when user data changes?
     session['user'] = db_user
     flash('Logged in as ' + str(db_user))
+    return safe_redirect('/')
+
+
+@auth.route('/logout')
+def logout():
+    for field in ('access_token', 'token', 'user_id', 'user', 'userinfo'):
+        if field in session:
+            del session[field]
+    flash('Logged out')
     return safe_redirect('/')
 
 
