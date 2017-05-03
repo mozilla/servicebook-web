@@ -12,7 +12,7 @@
         <th>First name</th>
         <th>Last name</th>
         <th>GitHub</th>
-        <th>Mozilla QA</th>
+        <th>Teams</th>
         <th>Editor</th>
         <th></th>
       </tr>
@@ -26,9 +26,12 @@
       {%if user.github %}<a href="https://github.com/{{user.github}}">{{user.github}}</a>{% endif %}
       </td>
       <td>
-      {%if user.mozqa %}
-        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-      {% endif %}
+        {%if user.team %}
+            {{user.team.name}}
+        {% endif %}
+        {%if user.secondary_team %}
+            | {{user.secondary_team.name}}
+        {% endif %}
       </td>
       <td>
       {%if user.editor %}

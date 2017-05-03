@@ -36,15 +36,22 @@ class BaseForm(Form):
         return entry['name']
 
 
-def _get_users(team=None):
-    if team is not None:
+def _get_users(teams=None):
+    if teams is None:
+        teams = ['Dev', 'QA', 'OPS']
+
+    def _get_team_id(name):
         filters = [{'name': 'name', 'op': 'eq', 'val': team}]
-        team_id = g.db.get_entries('team', filters=filters)[0]['id']
-        filter1 = {'name': 'team_id', 'op': 'eq', 'val': team_id}
-        filter2 = {'name': 'secondary_team_id', 'op': 'eq', 'val': team_id}
-        filters = [{"or": [filter1, filter2]}]
-    else:
-        filters = [{'name': 'mozqa', 'op': 'eq', 'val': True}]
+        return g.db.get_entries('team', filters=filters)[0]['id']
+
+    filters = []
+    for team in teams:
+        tid = _get_team_id(team)
+        filters.append({'name': 'team_id', 'op': 'eq', 'val': tid})
+        filters.append({'name': 'secondary_team_id', 'op': 'eq',
+                        'val': tid})
+
+    filters = [{"or": filters}]
 
     # XXX this call should be cached
     entries = g.db.get_entries('user', filters=filters, sort='firstname')
@@ -54,15 +61,15 @@ def _get_users(team=None):
 
 
 def get_devs():
-    return _get_users('Dev')
+    return _get_users(['Dev'])
 
 
 def get_qa():
-    return _get_users('QA')
+    return _get_users(['QA'])
 
 
 def get_ops():
-    return _get_users('OPS')
+    return _get_users(['OPS'])
 
 
 def get_users():
@@ -110,7 +117,7 @@ def display_entry(table, entry):
     return entry['id']
 
 
-def DynField(name, coerce=int, choices=get_users):
+def DynField(name, choices, coerce=int):
     return DynamicSelectField(name, coerce=coerce, choices=choices)
 
 
@@ -168,7 +175,7 @@ class NewProjectForm(BaseForm):
     irc = fields.StringField()
     bz_product = fields.StringField()
     bz_component = fields.StringField()
-    qa_group_name = DynField('qa_group', choices=get_groups, coerce=str)
+    qa_group_name = DynField('qa_group', coerce=str, choices=get_groups)
     qa_primary_id = DynField('qa_primary', choices=get_qa)
     qa_secondary_id = DynField('qa_secondary', choices=get_qa)
     op_primary_id = DynField('op_primary', choices=get_ops)
@@ -225,7 +232,6 @@ _FORMS['deployment'] = DeploymentForm
 class UserForm(BaseForm):
     firstname = fields.StringField()
     lastname = fields.StringField()
-    mozqa = fields.BooleanField()
     github = fields.StringField()
     editor = fields.BooleanField()
     email = fields.StringField()

@@ -51,6 +51,27 @@ def users_delete(user_id):
 @only_for_editors
 def users_view():
     users = g.db.get_entries('user')
+
+    # XXX should be pulled with a single call
+    def get_teams(user):
+        if user.team_id:
+            filters = [{'name': 'id', 'op': 'eq',
+                        'val': user.team_id}]
+            filters = [{'or': filters}]
+            teams = g.db.get_entries('team', filters)
+            user.team = teams[0]
+
+        if user.secondary_team_id:
+            filters = [{'name': 'id', 'op': 'eq',
+                        'val': user.secondary_team_id}]
+            filters = [{'or': filters}]
+            teams = g.db.get_entries('team', filters)
+            user.secondary_team = teams[0]
+
+        return user
+
+    users = [get_teams(user) for user in users]
+
     return render_template('users.html', users=users)
 
 
