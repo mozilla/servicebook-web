@@ -79,18 +79,28 @@ class OIDConnect(object):
         self.auth_endpoint = "https://%s/authorize" % self.domain
         self.token_endpoint = "https://%s/oauth/token" % self.domain
         self.userinfo_endpoint = "https://%s/userinfo" % self.domain
+        self.app = app
+        self.ready = False
+
+    def set_auth(self):
+        if self.ready:
+            return
         provider = self.provider_info()
         client = self.client_info()
-        oidc = OIDCAuthentication(app, provider_configuration_info=provider,
-                                  client_registration_info=client)
-        app.add_url_rule(self.redirect_uri, 'redirect_oidc',
-                         oidc._handle_authentication_response)
-        with app.app_context():
-            url = url_for('redirect_oidc')
-            oidc.client_registration_info['redirect_uris'] = url
-            oidc.client.registration_response['redirect_uris'] = url
+        self.oidc = OIDCAuthentication(self.app,
+                                       provider_configuration_info=provider,
+                                       client_registration_info=client)
 
-        app.oidc = oidc
+        self.app.add_url_rule(self.redirect_uri, 'redirect_oidc',
+                              self.oidc._handle_authentication_response)
+
+        with self.app.app_context():
+            url = url_for('redirect_oidc')
+            self.oidc.client_registration_info['redirect_uris'] = url
+            self.oidc.client.registration_response['redirect_uris'] = url
+
+        self.app.oidc = self.oidc
+        self.ready = True
 
     def client_info(self):
         return {'client_id': self.client_id,

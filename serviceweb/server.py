@@ -32,11 +32,8 @@ def create_app(ini_file=DEFAULT_INI_FILE):
     INIConfig(app)
     app.config.from_inifile(ini_file)
     app.secret_key = app.config['common']['secret_key']
-
-    app.config['SERVER_NAME'] = 'localhost:5000'
-
     Bootstrap(app)
-    OIDConnect(app, **app.config['oidc'])
+    oidc = OIDConnect(app, **app.config['oidc'])
     Mozillians(app)
     Markdown(app)
 
@@ -57,6 +54,10 @@ def create_app(ini_file=DEFAULT_INI_FILE):
            app.static_url_path + '/<path:filename>',
            endpoint='static',
            view_func=app.send_static_file)
+
+    @app.before_first_request
+    def _init_auth():
+        oidc.set_auth()
 
     @app.before_request
     def before_req():
