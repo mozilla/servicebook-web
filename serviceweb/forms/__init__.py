@@ -234,6 +234,7 @@ class UserForm(BaseForm):
     lastname = fields.StringField()
     github = fields.StringField()
     editor = fields.BooleanField()
+    public = fields.BooleanField()
     email = fields.StringField()
     irc = fields.StringField()
     mozillians_login = fields.StringField()

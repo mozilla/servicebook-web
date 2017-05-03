@@ -16,6 +16,9 @@ def user_view(user_id):
     except ResourceError:
         return abort(404)
 
+    if user is None:
+        return abort(404)
+
     mozillians = users_bp.app.extensions['mozillians']
 
     if user['mozillians_login']:

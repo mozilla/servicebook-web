@@ -27,6 +27,47 @@ DEFAULT_INI_FILE = os.path.join(HERE, '..', 'serviceweb.ini')
 _DEBUG = True
 
 
+class PrivacyAwareClient(Client):
+    def __init__(self, app, *args, **kw):
+        super(PrivacyAwareClient, self).__init__(*args, **kw)
+        self.app = app
+
+    def _post_filter(self, table, entries):
+        if g.user_in_mozteam:
+            return entries
+        filtered = []
+        for entry in entries:
+            if table == 'user':
+                if entry.public:
+                    filtered.append(entry)
+            elif table == 'project':
+                for field in ('qa_primary', 'qa_secondary',
+                              'op_primary', 'op_secondary',
+                              'dev_primary', 'dev_secondary'):
+                    if field in entry and not entry[field]['public']:
+                        entry[field] = None
+                filtered.append(entry)
+        return filtered
+
+    # bypass privacy
+    def _get_entries(self, table, filters=None, sort=None):
+        return super(PrivacyAwareClient, self).get_entries(table, filters,
+                                                           sort)
+
+    def get_entries(self, table, filters=None, sort=None):
+        entries = super(PrivacyAwareClient, self).get_entries(table, filters,
+                                                              sort)
+        return self._post_filter(table, entries)
+
+    def get_entry(self, table, entry_id, bust_cache=False):
+        res = super(PrivacyAwareClient, self).get_entry(table, entry_id,
+                                                        bust_cache)
+        res = self._post_filter(table, [res])
+        if len(res) == 0:
+            return None
+        return res[0]
+
+
 def create_app(ini_file=DEFAULT_INI_FILE):
     app = Flask(__name__, static_url_path='/static')
     INIConfig(app)
@@ -46,7 +87,7 @@ def create_app(ini_file=DEFAULT_INI_FILE):
     if service_book is None:
         service_book = app.config['common']['service_book']
 
-    app.db = Client(service_book, cache=False)
+    app.db = PrivacyAwareClient(app, service_book, cache=False)
     app.search = Search(service_book)
     app.register_error_handler(401, unauthorized_view)
     nav.init_app(app)
@@ -66,7 +107,7 @@ def create_app(ini_file=DEFAULT_INI_FILE):
             team_id = g.user.get('team_id')
             secondary_team_id = g.user.get('secondary_team_id')
             # cache
-            teams = [team.id for team in g.db.get_entries('team')
+            teams = [team.id for team in g.db._get_entries('team')
                      if team.name in ('OPS', 'QA', 'Dev')]
 
             g.user_in_mozteam = (team_id in teams or secondary_team_id in teams

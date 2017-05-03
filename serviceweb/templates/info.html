@@ -25,33 +25,33 @@
           <a href="/project/{{project.id}}">{{project.name}}</a>
         </td>
         <td>
-          {% if project.qa_primary_id %}
+          {% if project.qa_primary %}
             <a
               href="/user/{{project.qa_primary_id}}">{{project.qa_primary|fullname}}
             (QA)</a>
           {% endif %}
-          {% if project.qa_secondary_id %}
+          {% if project.qa_secondary %}
             <a
               href="/user/{{project.qa_secondary_id}}">{{project.qa_secondary|fullname}}
             (QA)</a>
           {% endif %}
-          {% if project.op_primary_id %}
+          {% if project.op_primary %}
             <a
               href="/user/{{project.op_primary_id}}">{{project.op_primary|fullname}}
             (OPS)</a>
           {% endif %}
-          {% if project.op_secondary_id %}
+          {% if project.op_secondary %}
              <a
               href="/user/{{project.op_secondary_id}}">{{project.op_secondary|fullname}}
             (OPS)</a>
           {% endif %}
-          {% if project.dev_primary_id %}
+          {% if project.dev_primary %}
             <a
               href="/user/{{project.dev_primary_id}}">{{project.dev_primary|fullname}}
               (Dev)
             </a>
           {% endif %}
-          {% if project.dev_secondary_id %}
+          {% if project.dev_secondary %}
             <a href="/user/{{project.dev_secondary_id}}">{{project.dev_secondary|fullname}}
             (Dev)
             </a>
