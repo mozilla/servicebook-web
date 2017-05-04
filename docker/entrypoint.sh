@@ -7,11 +7,11 @@ fi
 
 case "$ARG" in
   "start")
-      supervisord -n
+      supervisord -n -c /etc/supervisor/supervisord.conf
       ;;
   "test")
     export "SERVICEBOOK=http://localhost:5001/api/"
-    supervisord -n
+    supervisord -n -c /etc/supervisor/supervisord.conf
     ;;
   "shell"|"admin")
       /bin/bash
