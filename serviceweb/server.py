@@ -10,7 +10,7 @@ from flaskext.markdown import Markdown
 from serviceweb.nav import nav
 from serviceweb.search import Search
 from serviceweb.views import blueprints
-from serviceweb.auth import get_user, GithubAuth
+from serviceweb.auth import get_user, OIDConnect
 from serviceweb.views.auth import unauthorized_view
 from serviceweb.mozillians import Mozillians
 from serviceweb.translations import APP_TRANSLATIONS
@@ -32,9 +32,8 @@ def create_app(ini_file=DEFAULT_INI_FILE):
     INIConfig(app)
     app.config.from_inifile(ini_file)
     app.secret_key = app.config['common']['secret_key']
-
     Bootstrap(app)
-    GithubAuth(app)
+    oidc = OIDConnect(app, **app.config['oidc'])
     Mozillians(app)
     Markdown(app)
 
@@ -55,6 +54,10 @@ def create_app(ini_file=DEFAULT_INI_FILE):
            app.static_url_path + '/<path:filename>',
            endpoint='static',
            view_func=app.send_static_file)
+
+    @app.before_first_request
+    def _init_auth():
+        oidc.set_auth()
 
     @app.before_request
     def before_req():

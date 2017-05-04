@@ -4,9 +4,8 @@ flask-bootstrap
 flask-iniconfig
 flask-markdown
 flask-nav
+flask-pyoidc
 Flask-WTF
 PyYAML
 humanize
-rauth
 -e git+https://github.com/tarekziade/restjson.git#egg=restjson
--e git+https://github.com/tarekziade/smwogger#egg=smwogger

@@ -32,7 +32,6 @@
   {%block page -%}{%- endblock page %}
 </div>
 
-</div>
 
  <footer class="footer navbar-fixed-bottom">
   <div class="container">
@@ -45,5 +44,10 @@
  </footer>
 
 {% endblock content %}
+
+{% block scripts %}
+  <script src="{{bootstrap_find_resource('jquery.js', cdn='jquery')}}"></script>
+  <script src="{{bootstrap_find_resource('js/bootstrap.js', cdn='bootstrap')}}"></script>
+{% endblock scripts %}
 
 
