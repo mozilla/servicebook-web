@@ -102,18 +102,24 @@
          {% endif %}
      </li>
      {% if project_info %}
+     {% if 'contact' in project_info %}
      <li class="list-group-item">
        <span class="label label-success label-as-badge">{...}</span>
        <em>Project Contact</em>
        <a href="mailto:{{project_info['contact']['email']}}"><strong>{{project_info['contact']['name']}}</strong></a></li>
+     {% endif %}
+     {% if 'license' in project_info %}
      <li class="list-group-item">
        <span class="label label-success label-as-badge">{...}</span>
        <em>Licence</em>
        <a href="{{project_info['license']['url']}}"><strong>{{project_info['license']['name']}}</strong></a></li>
+     {% endif %}
+     {% if 'x-mozilla-services' in project_info %}
      <li class="list-group-item">
        <span class="label label-success label-as-badge">{...}</span>
        <em>Homepage</em>
        <a href="{{project_info['x-mozilla-services']['homepage']}}">{{project_info['x-mozilla-services']['homepage']}}</a></li>
+     {% endif %}
      {% endif %}
 
   </ul>
