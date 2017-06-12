@@ -8,6 +8,8 @@ RUN mkdir -p /etc/dpkg/dpkg.cfg.d \
     &&  apt-get -qq update \
     &&  apt-get -y install --no-install-recommends \
         build-essential \
+        libffi-dev \
+        libssl-dev \
         curl \
         git \
         supervisor \
