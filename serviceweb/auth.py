@@ -1,7 +1,7 @@
+from urllib.parse import urlparse
 from functools import wraps
 from flask_pyoidc.flask_pyoidc import OIDCAuthentication
 from flask import session, abort, g
-from flask.helpers import url_for
 
 
 class NotRegisteredError(Exception):
@@ -87,15 +87,17 @@ class OIDConnect(object):
             return
         provider = self.provider_info()
         client = self.client_info()
+        parse_url = urlparse(self.redirect_uri)
+
         self.oidc = OIDCAuthentication(self.app,
                                        provider_configuration_info=provider,
                                        client_registration_info=client)
 
-        self.app.add_url_rule(self.redirect_uri, 'redirect_oidc',
+        self.app.add_url_rule(parse_url.path, 'redirect_oidc',
                               self.oidc._handle_authentication_response)
 
         with self.app.app_context():
-            url = url_for('redirect_oidc')
+            url = self.redirect_uri
             self.oidc.client_registration_info['redirect_uris'] = url
             self.oidc.client.registration_response['redirect_uris'] = url
 
