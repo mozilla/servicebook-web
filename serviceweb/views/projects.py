@@ -3,6 +3,7 @@ import yaml
 import requests
 
 from flask import render_template, abort, request, g, Blueprint
+from botocore.auth import NoCredentialsError
 
 from serviceweb.auth import only_for_editors
 from serviceweb.forms import NewProjectForm, DeploymentForm
@@ -87,8 +88,12 @@ def project(project_id):
 
     backlink = '/'
     edit = '/project/%d/edit' % project_id
-    screenshots = ['https://s3-us-west-2.amazonaws.com/servicebook/' + key
-                   for key in get_list(project_id)]
+    try:
+        screenshots = ['https://s3-us-west-2.amazonaws.com/servicebook/' + key
+                       for key in get_list(project_id)]
+    except NoCredentialsError:
+        screenshots = []
+
     return render_template('project.html', project=project, bugs=bugs,
                            edit=edit, jenkins_builds=builds,
                            project_info=project_info, backlink=backlink,
