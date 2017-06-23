@@ -1,27 +1,12 @@
 from flask import redirect, Blueprint, request
 from flask import render_template
 
-from contextlib import contextmanager
-import boto3
 from serviceweb.auth import only_for_editors
 from serviceweb.forms import get_form
+from serviceweb.screenshots import upload_file
 
 
 upload = Blueprint('upload', __name__)
-
-
-@contextmanager
-def s3bucket(name):
-    s3 = boto3.resource('s3')
-    bucket = s3.Bucket(name)
-    yield bucket
-
-
-def upload_file(project_id, filename, data, name='servicebook'):
-    key = '%s-%s' % (project_id, filename)
-    with s3bucket(name) as bucket:
-        data.seek(0)
-        return bucket.upload_fileobj(data, key)
 
 
 @upload.route("/project/<int:project_id>/upload",
