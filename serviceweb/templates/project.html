@@ -152,5 +152,33 @@
 </div>
   {% endif %}
   {% endfor %}
+
+  {% if screenshots %}
+  <h2>Screenshots</h2>
+  {% endif %}
+
+  <div class="row">
+    <div class="col-md-5">
+  {% for screenshot in screenshots %}
+    <div class="nailthumb-container" style="float: left; margin: 4px">
+<a href="{{screenshot}}"><img src="{{screenshot}}"></img></a>
+    </div>
+  {% endfor %}
+  </div>
+  </div>
+
 </div>
 {% endblock %}
+
+{% block scripts %}
+    {{super()}}
+    <script type="text/javascript" src="//www.garralab.com/projects/nailthumb/src/jquery.nailthumb.1.0.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+      $('.nailthumb-container').nailthumb({width:100,height:100});
+    });
+</script>
+  {% endblock %} 
+
+

@@ -245,3 +245,10 @@ class UserForm(BaseForm):
 
 
 _FORMS['user'] = UserForm
+
+
+class UploadForm(BaseForm):
+    file = fields.FileField()
+
+
+_FORMS['upload'] = UploadForm
