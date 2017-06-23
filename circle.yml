@@ -18,7 +18,7 @@ dependencies:
         "$CIRCLE_BUILD_URL"
         > version.json
     - cp version.json $CIRCLE_ARTIFACTS
-    - cd docker; docker build --rm=false -t app:build .
+    - cd docker; docker build -t app:build .
     - >
       I="image-$(date +%j).tar"; mkdir -p ~/docker; rm ~/docker/*; docker save app:build > ~/docker/$I; ls -l ~/docker
 test:
