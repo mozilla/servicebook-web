@@ -8,4 +8,5 @@ flask-pyoidc
 Flask-WTF
 PyYAML
 humanize
+boto3
 -e git+https://github.com/tarekziade/restjson.git#egg=restjson
