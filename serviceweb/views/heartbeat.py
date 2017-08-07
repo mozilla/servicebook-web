@@ -1,23 +1,15 @@
-import subprocess
-import json
-from flask import Blueprint, render_template, jsonify, g
-from serviceweb import __version__
+import os
+from flask import Blueprint, jsonify, g, Response
 
 
+here = os.path.abspath(os.path.dirname(__file__))
 heartbeat = Blueprint('heartbeat', __name__)
 
 
 @heartbeat.route('/__version__')
 def _version():
-    try:
-        commit = subprocess.check_output(["git", "describe", "--always"])
-    except Exception:
-        commit = b''
-
-    resp = render_template('version.json', version=__version__,
-                           commit=str(commit.strip(), 'utf8'))
-    data = json.loads(resp)
-    return jsonify(data)
+    with open(os.path.join(here, '..', 'templates', 'version.json')) as f:
+        return Response(f.read(), mimetype='application/json')
 
 
 @heartbeat.route('/__lbheartbeat__')
