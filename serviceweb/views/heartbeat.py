@@ -3,12 +3,18 @@ from flask import Blueprint, jsonify, g, Response
 
 
 here = os.path.abspath(os.path.dirname(__file__))
+circleci_artifact = 'version.json'
 heartbeat = Blueprint('heartbeat', __name__)
 
 
 @heartbeat.route('/__version__')
 def _version():
-    with open(os.path.join(here, '..', 'templates', 'version.json')) as f:
+    if os.path.exists(circleci_artifact):
+        filename = circleci_artifact
+    else:
+        filename = os.path.join(here, '..', 'templates', 'version.json')
+
+    with open(filename) as f:
         return Response(f.read(), mimetype='application/json')
 
 
