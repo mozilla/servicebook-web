@@ -1,6 +1,8 @@
 # Servicebook
 FROM python:3.5-slim
 WORKDIR /app
+COPY version.json version.json
+RUN cat version.json
 RUN mkdir -p /etc/dpkg/dpkg.cfg.d \
     &&  echo "path-exclude=/usr/share/locale/*" >> /etc/dpkg/dpkg.cfg.d/excludes \
     &&  echo "path-exclude=/usr/share/man/*" >> /etc/dpkg/dpkg.cfg.d/excludes \
@@ -18,12 +20,9 @@ RUN mkdir -p /etc/dpkg/dpkg.cfg.d \
 
 RUN addgroup --gid 10001 app
 RUN adduser --gid 10001 --uid 10001 --home /app --shell /sbin/nologin --no-create-home --disabled-password --gecos we,dont,care,yeah app
-
 COPY requirements.txt /app/requirements.txt
 RUN pip install -r requirements.txt
 COPY supervisor.conf /etc/supervisor/conf.d/
-COPY version.json /app/version.json
-
 ADD . /app
 COPY entrypoint.sh /app/entrypoint.sh
 ENTRYPOINT ["/app/entrypoint.sh"]

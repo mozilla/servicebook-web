@@ -10,7 +10,7 @@ case "$ARG" in
       supervisord -n -c /etc/supervisor/supervisord.conf
       ;;
   "test")
-    export "SERVICEBOOK=http://localhost:5001/api/"
+    export "SERVICEBOOK=http://localhost:5000/api/"
     supervisord -n -c /etc/supervisor/supervisord.conf
     ;;
   "shell"|"admin")
