@@ -38,7 +38,7 @@ class BaseForm(Form):
 
 def _get_users(teams=None):
     if teams is None:
-        teams = ['Dev', 'QA', 'OPS']
+        teams = ['Dev', 'QA', 'OPS', 'Community']
 
     def _get_team_id(name):
         filters = [{'name': 'name', 'op': 'eq', 'val': team}]
