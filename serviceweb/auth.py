@@ -12,24 +12,31 @@ def oidc2dbuser(oidc_user):
     if 'nickname' not in oidc_user:
         raise NotImplementedError()
 
+    # via github
     login = oidc_user['nickname']
     filters = [{'name': 'github',
                 'op': 'eq',
                 'val': login}]
-
     # XXX this call should have an internal cache
     res = g.db.get_entries('user', filters=filters)
 
     if len(res) == 1:
-        db_user = res[0]
+        return res[0]
 
     elif len(res) > 1:
         raise ValueError(res)
     else:
-        # not creating entries automatically for now
-        raise NotRegisteredError(login)
+        # try via ldap email
+        for email in oidc_user['emails']:
+            filters = [{'name': 'email', 'op': 'eq', 'val': email}]
+            res = g.db.get_entries('user', filters=filters)
+            if len(res) == 1: 
+                return res[0]
+            elif len(res) > 1:
+                raise ValueError(res)
 
-    return db_user
+    # not creating entries automatically for now
+    raise NotRegisteredError(login)
 
 
 def get_user(app):
