@@ -30,7 +30,7 @@ def oidc2dbuser(oidc_user):
         for email in oidc_user['emails']:
             filters = [{'name': 'email', 'op': 'eq', 'val': email}]
             res = g.db.get_entries('user', filters=filters)
-            if len(res) == 1: 
+            if len(res) == 1:
                 return res[0]
             elif len(res) > 1:
                 raise ValueError(res)
