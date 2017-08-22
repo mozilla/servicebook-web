@@ -88,9 +88,11 @@ def project(project_id):
 
     backlink = '/'
     edit = '/project/%d/edit' % project_id
+    bucket = projects.app.config['common']['screenshot_bucket']
+    bucket_url = 'https://s3-us-east-1.amazonaws.com/' + bucket
     try:
-        screenshots = ['https://s3-us-west-2.amazonaws.com/servicebook/' + key
-                       for key in get_list(project_id)]
+        screenshots = [bucket_url + '/' + key
+                       for key in get_list(project_id, name=bucket)]
     except NoCredentialsError:
         screenshots = []
 

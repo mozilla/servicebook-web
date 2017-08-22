@@ -13,11 +13,12 @@ upload = Blueprint('upload', __name__)
               methods=['POST', 'GET'])
 @only_for_editors
 def _upload_screenshot(project_id):
+    bucket = upload.app.config['common']['screenshot_bucket']
     backlink = "/project/%d" % project_id
     if request.method == 'POST':
         data_file = request.files.get('file')
         file_name = data_file.filename
-        upload_file(project_id, file_name, data_file)
+        upload_file(project_id, file_name, data_file, name=bucket)
         return redirect(backlink)
     else:
         form = get_form('upload')(request.form)
