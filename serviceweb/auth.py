@@ -108,6 +108,11 @@ class OIDConnect(object):
             self.oidc.client_registration_info['redirect_uris'] = url
             self.oidc.client.registration_response['redirect_uris'] = url
 
+            @self.oidc.error_view
+            def error(error=None, error_description=None):
+                 from flask import jsonify
+                 return jsonify({'error': error, 'message': error_description})
+
         self.app.oidc = self.oidc
         self.ready = True
 
