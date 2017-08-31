@@ -26,7 +26,7 @@ import humanize
 
 HERE = os.path.dirname(__file__)
 DEFAULT_INI_FILE = os.path.join(HERE, '..', 'serviceweb.ini')
-_DEBUG = True
+_DEBUG = False
 sentry = Sentry()
 
 
@@ -35,11 +35,10 @@ def create_app(ini_file=DEFAULT_INI_FILE):
     INIConfig(app)
     app.config.from_inifile(ini_file)
     app.secret_key = app.config['common']['secret_key']
-
     if app.config.get('sentry', {}).get('dsn') is not None:
         sentry.init_app(app, dsn=app.config['sentry']['dsn'],
                         logging=True, level=logging.ERROR)
-        sentry_enabled = False
+        sentry_enabled = True
     else:
         sentry_enabled = False
 
@@ -119,6 +118,7 @@ def create_app(ini_file=DEFAULT_INI_FILE):
 
     @app.errorhandler(500)
     def _500(error):
+
         if sentry_enabled:
             data = {'event_id': g.sentry_event_id,
                     'public_dsn': sentry.client.get_public_dsn('https')}
