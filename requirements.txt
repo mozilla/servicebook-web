@@ -9,4 +9,5 @@ Flask-WTF
 PyYAML
 humanize
 boto3
+raven[flask]
 -e git+https://github.com/tarekziade/restjson.git#egg=restjson

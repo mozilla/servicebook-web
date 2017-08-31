@@ -1,7 +1,7 @@
 from urllib.parse import urlparse
 from functools import wraps
 from flask_pyoidc.flask_pyoidc import OIDCAuthentication
-from flask import session, abort, g
+from flask import session, abort, g, jsonify
 
 
 class NotRegisteredError(Exception):
@@ -110,8 +110,7 @@ class OIDConnect(object):
 
             @self.oidc.error_view
             def error(error=None, error_description=None):
-                 from flask import jsonify
-                 return jsonify({'error': error, 'message': error_description})
+                return jsonify({'error': error, 'message': error_description})
 
         self.app.oidc = self.oidc
         self.ready = True

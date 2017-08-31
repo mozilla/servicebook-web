@@ -1,11 +1,13 @@
 import time
 import os
 import logging.config
+import logging
 
 from flask import Flask, g, render_template
 from flask_bootstrap import Bootstrap
 from flask_iniconfig import INIConfig
 from flaskext.markdown import Markdown
+from raven.contrib.flask import Sentry
 
 from serviceweb.nav import nav
 from serviceweb.search import Search
@@ -25,6 +27,7 @@ import humanize
 HERE = os.path.dirname(__file__)
 DEFAULT_INI_FILE = os.path.join(HERE, '..', 'serviceweb.ini')
 _DEBUG = True
+sentry = Sentry()
 
 
 def create_app(ini_file=DEFAULT_INI_FILE):
@@ -32,6 +35,14 @@ def create_app(ini_file=DEFAULT_INI_FILE):
     INIConfig(app)
     app.config.from_inifile(ini_file)
     app.secret_key = app.config['common']['secret_key']
+
+    if app.config.get('sentry', {}).get('dsn') is not None:
+        sentry.init_app(app, dsn=app.config['sentry']['dsn'],
+                        logging=True, level=logging.ERROR)
+        sentry_enabled = False
+    else:
+        sentry_enabled = False
+
     Bootstrap(app)
     oidc = OIDConnect(app, **app.config['oidc'])
     Mozillians(app)
@@ -105,6 +116,16 @@ def create_app(ini_file=DEFAULT_INI_FILE):
     @app.errorhandler(404)
     def _404(err):
         return render_template('_404.html')
+
+    @app.errorhandler(500)
+    def _500(error):
+        if sentry_enabled:
+            data = {'event_id': g.sentry_event_id,
+                    'public_dsn': sentry.client.get_public_dsn('https')}
+        else:
+            data = {}
+
+        return render_template('_500.html', **data)
 
     logging.config.fileConfig(ini_file)
     return app
