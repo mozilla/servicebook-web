@@ -11,3 +11,4 @@ humanize
 boto3
 raven[flask]
 -e git+https://github.com/tarekziade/restjson.git#egg=restjson
+-e git+https://github.com/tarekziade/flask-secure-headers.git#egg=flask-secure-headers

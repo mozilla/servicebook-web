@@ -4,6 +4,12 @@ from flask import render_template, Blueprint, request, g
 frontend = Blueprint('frontend', __name__)
 
 
+@frontend.route("/csp_report", methods=["POST"])
+def csp_report():
+    # XXX
+    pass
+
+
 @frontend.route("/")
 def home():
     search = request.args.get('search')

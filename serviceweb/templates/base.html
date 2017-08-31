@@ -1,11 +1,19 @@
 {% extends "bootstrap/base.html" %}
+
+
+
 {% block head %}
+
   {{super()}}
+
+{% block styles %}
+  <link href="/static/bootstrap.min.css" rel="stylesheet">
   <link href='/static/css/bookstyle.css' media='screen' rel='stylesheet' type='text/css'/>
   <!-- should be in project ony page -->
   <link href='/static/css/circle.css' media='screen' rel='stylesheet' type='text/css'/>
-  <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-  {% endblock %}
+  <link href="/static/bootstrap-toggle.min.css" rel="stylesheet">
+{% endblock %}
+{% endblock %}
 
 {% block navbar %}
 {{nav.frontend_top.render()}}
@@ -46,8 +54,8 @@
 {% endblock content %}
 
 {% block scripts %}
-  <script src="{{bootstrap_find_resource('jquery.js', cdn='jquery')}}"></script>
-  <script src="{{bootstrap_find_resource('js/bootstrap.js', cdn='bootstrap')}}"></script>
+  <script src="/static/jquery.min.js"></script>
+  <script src="/static/bootstrap.min.js"></script>
 {% endblock scripts %}
 
 
