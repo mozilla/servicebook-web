@@ -5,4 +5,5 @@ git+https://github.com/tarekziade/smwogger#egg=smwogger
 git+https://github.com/mozilla/servicebook.git#egg=servicebook
 git+https://github.com/jfinkels/flask-restless.git#egg=flask-restless
 git+https://github.com/tarekziade/flask-restless-swagger.git#egg=flask-restless-swagger
+git+https://github.com/tarekziade/flask-secure-headers.git#egg=flask-secure-headers
 uwsgi
