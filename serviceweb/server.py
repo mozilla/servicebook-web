@@ -4,7 +4,7 @@ import os
 import logging.config
 import logging
 
-from flask import Flask, g, render_template
+from flask import Flask, g, render_template, send_from_directory
 from flask_bootstrap import Bootstrap
 from flask_iniconfig import INIConfig
 from flaskext.markdown import Markdown
@@ -28,6 +28,7 @@ import humanize
 
 HERE = os.path.dirname(__file__)
 DEFAULT_INI_FILE = os.path.join(HERE, '..', 'serviceweb.ini')
+_FONTS = os.path.join(HERE, 'fonts')
 _DEBUG = False
 sentry = Sentry()
 
@@ -45,7 +46,7 @@ def create_app(ini_file=DEFAULT_INI_FILE):
         sentry_enabled = False
 
     sh = Secure_Headers()
-    sh.defaultPolicies['CSP']['default-src'] = ['self', 'unsafe-inline']
+    sh.defaultPolicies['CSP'] = None
     sh.init_app(app)
 
     Bootstrap(app)
@@ -125,18 +126,21 @@ def create_app(ini_file=DEFAULT_INI_FILE):
 
     @app.errorhandler(404)
     def _404(err):
-        return render_template('_404.html')
+        return render_template('_404.html'), 404
 
     @app.errorhandler(500)
     def _500(error):
-
         if sentry_enabled:
             data = {'event_id': g.sentry_event_id,
                     'public_dsn': sentry.client.get_public_dsn('https')}
         else:
             data = {}
 
-        return render_template('_500.html', **data)
+        return render_template('_500.html', **data), 500
+
+    @app.route('/fonts/<path:filename>')
+    def fonts(filename):
+        return send_from_directory(_FONTS, filename)
 
     logging.config.fileConfig(ini_file)
     return app

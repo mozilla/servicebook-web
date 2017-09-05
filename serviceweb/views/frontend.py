@@ -6,8 +6,8 @@ frontend = Blueprint('frontend', __name__)
 
 @frontend.route("/csp_report", methods=["POST"])
 def csp_report():
-    # XXX
-    pass
+    # XXX report CSP violations to sentry
+    return ''
 
 
 @frontend.route("/")
