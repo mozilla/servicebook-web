@@ -1,3 +1,4 @@
+import base64
 import time
 import os
 import logging.config
@@ -63,6 +64,7 @@ def create_app(ini_file=DEFAULT_INI_FILE):
     app.db = Client(service_book, cache=False)
     if 'service_book_api' in app.config['common']:
         api_key = app.config['common']['service_book_api']
+        api_key = base64.b64encode(api_key.encode('utf8')).decode('utf8')
         app.db.session.headers['Authorization'] = 'APIKey ' + api_key
 
     app.search = Search(service_book)
