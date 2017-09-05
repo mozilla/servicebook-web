@@ -51,9 +51,9 @@ class EditTest(BaseTest):
         with self.logged_in():
             deleted = self.app.get('/user/1/delete')
             self.assertEqual(deleted.status_code, 302)
-            res = self.app.get('/user/1/delete')
+            res = self.app.get('/user/1/delete', status=404)
             self.assertTrue(b'Error 404' in res.body)
-            res = self.app.get('/user/1')
+            res = self.app.get('/user/1', status=404)
             self.assertTrue(b'Error 404' in res.body)
 
     def test_add_user(self):
