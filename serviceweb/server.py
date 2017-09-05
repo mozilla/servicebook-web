@@ -61,6 +61,10 @@ def create_app(ini_file=DEFAULT_INI_FILE):
         service_book = app.config['common']['service_book']
 
     app.db = Client(service_book, cache=False)
+    if 'service_book_api' in app.config['common']:
+        api_key = app.config['common']['service_book_api']
+        app.db.session.headers['Authorization'] = 'APIKey ' + api_key
+
     app.search = Search(service_book)
     app.register_error_handler(401, unauthorized_view)
     nav.init_app(app)
