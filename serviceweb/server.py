@@ -45,9 +45,9 @@ def create_app(ini_file=DEFAULT_INI_FILE):
     else:
         sentry_enabled = False
 
-    sh = Secure_Headers()
-    sh.defaultPolicies['CSP'] = None
-    sh.init_app(app)
+    #sh = Secure_Headers()
+    #sh.defaultPolicies['CSP'] = None
+    #sh.init_app(app)
 
     Bootstrap(app)
     oidc = OIDConnect(app, **app.config['oidc'])
