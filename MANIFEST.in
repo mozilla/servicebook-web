@@ -7,3 +7,4 @@ include .travis.yml
 include serviceweb/dump.json
 recursive-include serviceweb/templates *
 recursive-include serviceweb/static *
+recursive-include serviceweb/fonts *.ttf *.woff *.woff2
