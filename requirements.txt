@@ -2,7 +2,7 @@ requests==2.18.4
 flask==0.12.2
 flask-bootstrap==3.3.7.1
 flask-iniconfig==0.1.0
-flask-markdown
+flask-markdown==0.3
 flask-nav
 flask-pyoidc
 Flask-WTF
