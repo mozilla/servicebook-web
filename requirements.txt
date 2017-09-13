@@ -1,14 +1,14 @@
-requests
-flask
-flask-bootstrap
-flask-iniconfig
-flask-markdown
-flask-nav
-flask-pyoidc
-Flask-WTF
-PyYAML
-humanize
-boto3
-raven[flask]
+requests==2.18.4
+flask==0.12.2
+flask-bootstrap==3.3.7.1
+flask-iniconfig==0.1.0
+flask-markdown==0.3
+flask-nav==0.6
+flask-pyoidc==1.2.0
+Flask-WTF==0.14.2
+PyYAML==3.12
+humanize==0.5.1
+boto3==1.4.7
+raven[flask]==6.1.0
 -e git+https://github.com/tarekziade/restjson.git#egg=restjson
 -e git+https://github.com/tarekziade/flask-secure-headers.git#egg=flask-secure-headers
