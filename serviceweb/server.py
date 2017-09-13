@@ -9,7 +9,6 @@ from flask_bootstrap import Bootstrap
 from flask_iniconfig import INIConfig
 from flaskext.markdown import Markdown
 from raven.contrib.flask import Sentry
-from flask_secure_headers.core import Secure_Headers
 
 from serviceweb.nav import nav
 from serviceweb.search import Search
@@ -44,10 +43,6 @@ def create_app(ini_file=DEFAULT_INI_FILE):
         sentry_enabled = True
     else:
         sentry_enabled = False
-
-    #sh = Secure_Headers()
-    #sh.defaultPolicies['CSP'] = None
-    #sh.init_app(app)
 
     Bootstrap(app)
     oidc = OIDConnect(app, **app.config['oidc'])
