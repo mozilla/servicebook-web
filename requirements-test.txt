@@ -2,7 +2,7 @@
 
 flake8==3.4.1
 tox==2.8.2
-flask-webtest==0.0.8
+flask-webtest==0.0.9
 requests-mock
 -e git+https://github.com/mozilla/servicebook.git#egg=servicebook
 -e git+https://github.com/jfinkels/flask-restless.git#egg=flask-restless
