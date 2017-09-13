@@ -6,7 +6,7 @@ flask-markdown==0.3
 flask-nav==0.6
 flask-pyoidc==1.2.0
 Flask-WTF==0.14.2
-PyYAML
+PyYAML==3.12
 humanize
 boto3
 raven[flask]
