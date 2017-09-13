@@ -1,6 +1,6 @@
 -r requirements.txt
 
-flake8==3.3.0
+flake8==3.4.1
 tox==2.6.0
 flask-webtest==0.0.8
 requests-mock
