@@ -1,5 +1,5 @@
 requests
-flask
+flask==0.12.2
 flask-bootstrap
 flask-iniconfig
 flask-markdown
