@@ -94,6 +94,12 @@ def create_app(ini_file=DEFAULT_INI_FILE):
         else:
             g.user_in_mozteam = False
 
+    @app.after_request
+    def after_req(response):
+        response.headers["Cache-Control"] = "no-cache"
+        response.headers["Pragma"] = "no-cache"
+        return response
+
     @app.template_filter('humanize')
     def _humanize(last_modified):
         age = time.time() - (last_modified / 1000.)
