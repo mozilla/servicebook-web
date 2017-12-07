@@ -4,7 +4,7 @@ Service Book
 .. image:: https://img.shields.io/badge/license-MPL%202.0-blue.svg
    :target: https://github.com/mozilla/servicebook-web/blob/master/LICENSE.txt
    :alt: License
-   .. image:: http://coveralls.io/repos/github/mozilla/servicebook-web/badge.svg?branch=master
+.. image:: http://coveralls.io/repos/github/mozilla/servicebook-web/badge.svg?branch=master
    :target: https://coveralls.io/github/mozilla/servicebook-web?branch=master
    :alt: Coverage
 .. image:: http://travis-ci.org/mozilla/servicebook-web.svg?branch=master
