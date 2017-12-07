@@ -26,5 +26,5 @@ Then, to run it::
 
     $ make run
 
-This will expose the service book on http://localhost:5000
+This will expose the Service Book on http://localhost:5000
 
