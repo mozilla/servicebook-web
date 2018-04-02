@@ -1,7 +1,7 @@
 -r requirements.txt
 
 flake8==3.5.0
-tox==2.9.1
+tox==3.0.0
 flask-webtest==0.0.9
 requests-mock==1.4.0
 -e git+https://github.com/mozilla/servicebook.git#egg=servicebook
