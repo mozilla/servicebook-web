@@ -9,6 +9,6 @@ Flask-WTF==0.14.2
 PyYAML==3.12
 humanize==0.5.1
 boto3==1.4.8
-raven[flask]==6.6.0
+raven[flask]==6.7.0
 -e git+https://github.com/tarekziade/restjson.git#egg=restjson
 -e git+https://github.com/tarekziade/flask-secure-headers.git#egg=flask-secure-headers
