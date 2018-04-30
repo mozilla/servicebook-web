@@ -1,5 +1,5 @@
 requests==2.18.4
-flask==0.12.2
+flask==1.0.1
 flask-bootstrap==3.3.7.1
 flask-iniconfig==0.1.0
 flask-markdown==0.3
