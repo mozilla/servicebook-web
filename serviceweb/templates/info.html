@@ -23,6 +23,10 @@
           <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
           {% endif %}
           <a href="/project/{{project.id}}">{{project.name}}</a>
+          {% if not project.active %}
+          <span class="glyphicon glyphicon-alert" aria-hidden="true"
+                title="Project is not currently active"></span>
+          {% endif %}
         </td>
         <td>
           {% if project.qa_primary_id %}
