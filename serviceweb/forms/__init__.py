@@ -168,6 +168,7 @@ _DESC = 'To delete entries, uncheck them and submit the form.'
 
 class NewProjectForm(BaseForm):
     name = fields.StringField()
+    active = fields.BooleanField()
     homepage = fields.StringField()
     description = fields.TextAreaField()
     long_description = LargeTextAreaField(description='You can use Markdown.')

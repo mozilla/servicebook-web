@@ -5,6 +5,13 @@
 
 {% block page %}
 
+{% if not project.active %}
+<div class="alert alert-warning" role="alert">
+  <span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
+  Project is not currently active
+</div>
+{% endif %}
+
 <h3>
 {% for tag in project.tags %}
 <a class="label label-success" href="/?search={{tag.name}}">{{tag.name}}</a>
@@ -179,6 +186,4 @@
       $('.nailthumb-container').nailthumb({width:100,height:100});
     });
 </script>
-  {% endblock %} 
-
-
+  {% endblock %}

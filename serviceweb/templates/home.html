@@ -27,6 +27,10 @@
 {% for project in search_results %}
 <div>
   <a href="/project/{{project.id}}">{{project.name}}</a>
+  {% if not project.active %}
+  <span class="glyphicon glyphicon-alert" aria-hidden="true"
+        title="Project is not currently active"></span>
+  {% endif %}
 </div>
 {% endfor %}
 
