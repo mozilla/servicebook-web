@@ -23,10 +23,10 @@ There's a full deployment in Docker image in the docker/ directory.
 To build it::
 
     $ cd docker
-    $ make docker
+    $ make docker-build
 
 Then, to run it::
 
-    $ make run
+    $ make docker-run
 
 This will expose the service book on http://localhost:5000
