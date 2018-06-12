@@ -1,4 +1,4 @@
-requests==2.18.4
+requests==2.19.0
 flask==0.12.2
 flask-bootstrap==3.3.7.1
 flask-iniconfig==0.1.0
