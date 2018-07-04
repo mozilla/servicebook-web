@@ -1,12 +1,5 @@
-import sys
 from setuptools import setup, find_packages
 from serviceweb import __version__
-
-
-with open('requirements.txt') as f:
-    deps = [dep for dep in f.read().split('\n') if dep.strip() != ''
-            and not dep.startswith('-e')]
-    install_requires = deps
 
 
 setup(name='serviceweb',
@@ -15,7 +8,20 @@ setup(name='serviceweb',
       description="Mozilla Service Book Web App",
       include_package_data=True,
       zip_safe=False,
-      install_requires=install_requires,
+      install_requires=[
+        'requests',
+        'flask',
+        'flask-bootstrap',
+        'flask-iniconfig',
+        'flask-markdown',
+        'flask-nav',
+        'flask-pyoidc',
+        'Flask-WTF',
+        'PyYAML',
+        'humanize',
+        'boto3',
+        'raven[flask]',
+      ],
       entry_points="""
       [console_scripts]
       serviceweb = serviceweb.server:main

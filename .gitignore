@@ -1,2 +1,6 @@
-*.un~
+*.egg-info
 *.pyc
+*.un~
+.coverage
+.env
+.tox
