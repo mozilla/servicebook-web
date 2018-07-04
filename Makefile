@@ -1,26 +1,12 @@
-HERE = $(shell pwd)
-VENV = .
-VIRTUALENV = virtualenv
-BIN = $(VENV)/bin
-PYTHON = $(BIN)/python
+.PHONY: build run
 
-INSTALL = $(BIN)/pip install --no-deps
+SERVICEBOOK ?= http://192.168.1.12:5000/api/
 
-.PHONY: all test
+docker-build:
+	docker build -t serviceweb/dev:latest .
 
-all: build
+docker-run:
+	docker run -it -p 127.0.0.1:5000:5000 -e SERVICEBOOK=$(SERVICEBOOK) serviceweb/dev
 
-$(PYTHON):
-	$(VIRTUALENV) $(VTENV_OPTS) $(VENV)
-
-build: $(PYTHON)
-	$(PYTHON) setup.py develop
-
-clean:
-	rm -rf $(VENV)
-
-test_dependencies:
-	$(BIN)/pip install flake8 tox
-
-test: build test_dependencies
-	$(BIN)/tox
+docker-attach:
+	docker exec -i -t $(ID) /bin/bash

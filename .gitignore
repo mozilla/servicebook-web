@@ -4,3 +4,4 @@
 .coverage
 .env
 .tox
+coserver.std*

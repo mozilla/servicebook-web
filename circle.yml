@@ -18,14 +18,13 @@ dependencies:
         "$CIRCLE_BUILD_URL"
         > version.json && cat version.json | python -mjson.tool
     - cp version.json $CIRCLE_ARTIFACTS
-    - cp version.json docker
-    - cd docker; docker build -t app:build .
+    - docker build -t app:build .
     - >
       I="image-$(date +%j).tar"; mkdir -p ~/docker; rm ~/docker/*; docker save app:build > ~/docker/$I; ls -l ~/docker
 test:
   override:
-    - cd docker; docker run -d -i -p 5000:5000 app:build test; sleep 10
-    - curl --retry 10 --retry-delay 5 -v 'http://localhost:5000/__version__'
+    - docker run -d -i -p 5000:5000 app:build test; sleep 10
+    - curl --fail --retry 10 --retry-delay 5 -v 'http://localhost:5000/__version__'
 deployment:
   hub_latest:
     branch: "master"

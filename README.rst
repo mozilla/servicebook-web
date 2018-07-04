@@ -36,11 +36,10 @@ To run the tests::
 Run with Docker
 ---------------
 
-There's a full deployment in Docker image in the docker/ directory.
+There's a full deployment in Docker image.
 
 To build it::
 
-    $ cd docker
     $ make docker-build
 
 Then, to run it::
