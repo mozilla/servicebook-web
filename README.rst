@@ -22,7 +22,7 @@ variable. For example, set this to http://servicebook.dev.mozaws.net/api/ to
 use the development environment. For convenience, you can store this locally in
 a `.env` file.
 
-To install the development environmet and start Service Book locally::
+To install the development environment and start Service Book locally::
 
     $ pipenv install --dev
     $ pipenv run servicebook
