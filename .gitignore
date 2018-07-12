@@ -1,2 +1,7 @@
-*.un~
+*.egg-info
 *.pyc
+*.un~
+.coverage
+.env
+.tox
+coserver.std*

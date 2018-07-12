@@ -1,0 +1,39 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+boto3 = "==1.7.50"
+Flask = "==0.12.2"
+Flask-Bootstrap = "==3.3.7.1"
+Flask-INIConfig = "==0.1.0"
+Flask-Markdown = "==0.3"
+flask-nav = "==0.6"
+Flask-pyoidc = "==1.2.0"
+flask-restless = {git = "https://github.com/jfinkels/flask-restless.git", editable = true}
+flask-restless-swagger = {git = "https://github.com/tarekziade/flask-restless-swagger.git", editable = true}
+flask-secure-headers = {editable = true, git = "https://github.com/tarekziade/flask-secure-headers.git"}
+Flask-WTF = "==0.14.2"
+humanize = "==0.5.1"
+PyYAML = "==3.12"
+raven = {version = "==6.6.0", extras = ["flask"]}
+requests = "==2.19.1"
+restjson = {editable = true, git = "https://github.com/tarekziade/restjson.git"}
+servicebook = {git = "https://github.com/mozilla/servicebook.git", editable = true}
+servicebook-web = {editable = true, path = "."}
+uwsgi = "==2.0.17"
+
+[dev-packages]
+coverage = "*"
+flake8 = "==3.5.0"
+flask-webtest = "==0.0.9"
+nose = "*"
+requests-mock = "==1.5.0"
+
+[requires]
+python_version = "3.5"
+
+[scripts]
+servicebook = "python serviceweb/server.py"
+test = "nosetests -s serviceweb/tests/ --with-coverage --cover-package=serviceweb"

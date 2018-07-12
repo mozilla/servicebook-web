@@ -14,15 +14,32 @@ Service Book
 Small dashboard that lists all QA projects, and displays their Swagger
 documentation and everything we have about them.
 
+Hacking on Service Book
+-----------------------
+By default Service Book will use http://localhost:5000/api/ as the endpoint. If
+you want to use something else, you can set the `SERVICEBOOK` environment
+variable. For example, set this to http://servicebook.dev.mozaws.net/api/ to
+use the development environment. For convenience, you can store this locally in
+a `.env` file.
+
+To install the development environment and start Service Book locally::
+
+    $ pipenv install --dev
+    $ pipenv run servicebook
+
+Running the tests
+~~~~~~~~~~~~~~~~~
+To run the tests::
+
+      $ tox
 
 Run with Docker
 ---------------
 
-There's a full deployment in Docker image in the docker/ directory.
+There's a full deployment in Docker image.
 
 To build it::
 
-    $ cd docker
     $ make docker-build
 
 Then, to run it::

@@ -20,11 +20,12 @@ RUN mkdir -p /etc/dpkg/dpkg.cfg.d \
 
 RUN addgroup --gid 10001 app
 RUN adduser --gid 10001 --uid 10001 --home /app --shell /sbin/nologin --no-create-home --disabled-password --gecos we,dont,care,yeah app
-COPY requirements.txt /app/requirements.txt
-RUN pip install -r requirements.txt
-COPY supervisor.conf /etc/supervisor/conf.d/
+COPY pipenv.txt .
+RUN pip install -r pipenv.txt
+COPY Pipfile* /app/
 ADD . /app
-COPY entrypoint.sh /app/entrypoint.sh
+RUN pipenv install --system
+COPY supervisor.conf /etc/supervisor/conf.d/
 ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["start"]
 EXPOSE 5000
