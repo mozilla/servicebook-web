@@ -10,6 +10,9 @@ Service Book
 .. image:: http://travis-ci.org/mozilla/servicebook-web.svg?branch=master
    :target: https://travis-ci.org/mozilla/servicebook-web
    :alt: Travis
+.. image:: https://pyup.io/repos/github/mozilla/servicebook-web/shield.svg
+   :target: https://pyup.io/repos/github/mozilla/servicebook-web/
+   :alt: Updates
 
 Small dashboard that lists all QA projects, and displays their Swagger
 documentation and everything we have about them.
