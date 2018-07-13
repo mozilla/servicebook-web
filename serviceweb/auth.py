@@ -4,39 +4,31 @@ from flask_pyoidc.flask_pyoidc import OIDCAuthentication
 from flask import session, abort, g, jsonify
 
 
+class ScopedAuth(OIDCAuthentication):
+    def _do_userinfo_request(self, state, userinfo_endpoint_method):
+        if userinfo_endpoint_method is None:
+            return None
+        func = self.client.do_user_info_request
+        return func(method=userinfo_endpoint_method, state=state,
+                    scope='openid profile')
+
+
 class NotRegisteredError(Exception):
     pass
 
 
 def oidc2dbuser(oidc_user):
-    if 'nickname' not in oidc_user:
-        raise NotImplementedError()
-
-    # via github
-    login = oidc_user['nickname']
-    filters = [{'name': 'github',
-                'op': 'eq',
-                'val': login}]
-    # XXX this call should have an internal cache
-    res = g.db.get_entries('user', filters=filters)
-
-    if len(res) == 1:
-        return res[0]
-
-    elif len(res) > 1:
-        raise ValueError(res)
+    # got an email, looking in the DB
+    if 'email' in oidc_user:
+        email = oidc_user['email']
+        filters = [{'name': 'email', 'op': 'eq', 'val': email}]
+        res = g.db.get_entries('user', filters=filters)
+        if len(res) == 1:
+            return res[0]
     else:
-        # try via ldap email
-        for email in oidc_user['emails']:
-            filters = [{'name': 'email', 'op': 'eq', 'val': email}]
-            res = g.db.get_entries('user', filters=filters)
-            if len(res) == 1:
-                return res[0]
-            elif len(res) > 1:
-                raise ValueError(res)
-
+        email = ''
     # not creating entries automatically for now
-    raise NotRegisteredError(login)
+    raise NotRegisteredError(email)
 
 
 def get_user(app):
@@ -96,9 +88,9 @@ class OIDConnect(object):
         client = self.client_info()
         parse_url = urlparse(self.redirect_uri)
 
-        self.oidc = OIDCAuthentication(self.app,
-                                       provider_configuration_info=provider,
-                                       client_registration_info=client)
+        self.oidc = ScopedAuth(self.app,
+                               provider_configuration_info=provider,
+                               client_registration_info=client)
 
         self.app.add_url_rule(parse_url.path, 'redirect_oidc',
                               self.oidc._handle_authentication_response)
