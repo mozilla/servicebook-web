@@ -157,7 +157,7 @@ class BaseTest(TestCase):
         # redirects to 0auth, let's fake the callback
         code = 'yeah'
         oidc_resp = {'access_token': 'yup', 'token_type': 'xxx'}
-        oidc_user = {'nickname': 'tarekziade',
+        oidc_user = {'email': 'tarek@mozilla.com',
                      'login': 'tarekziade', 'name': 'Tarek Ziade'}
         oidc_auth = {}
 
