@@ -88,9 +88,11 @@ class OIDConnect(object):
         client = self.client_info()
         parse_url = urlparse(self.redirect_uri)
 
+        xtra = {"scope": ["openid", "profile"]}
         self.oidc = ScopedAuth(self.app,
                                provider_configuration_info=provider,
-                               client_registration_info=client)
+                               client_registration_info=client,
+                               extra_request_args=xtra)
 
         self.app.add_url_rule(parse_url.path, 'redirect_oidc',
                               self.oidc._handle_authentication_response)
