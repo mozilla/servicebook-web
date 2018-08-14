@@ -7,12 +7,12 @@ Service Book
 .. image:: https://img.shields.io/circleci/project/github/mozilla/servicebook-web/master.svg?logo=circleci
    :alt: CircleCI
    :target: https://circleci.com/gh/mozilla/servicebook/tree/master
-.. image:: https://img.shields.io/coveralls/github/mozilla/servicebook-web/master.svg
-   :target: https://coveralls.io/github/mozilla/servicebook-web?branch=master
-   :alt: Coverage
 .. image:: https://img.shields.io/travis/mozilla/servicebook-web/master.svg?logo=travis
    :target: https://travis-ci.org/mozilla/servicebook-web
    :alt: Travis
+.. image:: https://img.shields.io/coveralls/github/mozilla/servicebook-web/master.svg
+   :target: https://coveralls.io/github/mozilla/servicebook-web?branch=master
+   :alt: Coverage
 .. image:: https://pyup.io/repos/github/mozilla/servicebook-web/shield.svg
    :target: https://pyup.io/repos/github/mozilla/servicebook-web/
    :alt: Updates
