@@ -9,7 +9,7 @@ Service Book
    :target: https://circleci.com/gh/mozilla/servicebook/tree/master
 .. image:: https://img.shields.io/travis/mozilla/servicebook-web/master.svg?logo=travis
    :target: https://travis-ci.org/mozilla/servicebook-web
-   :alt: Travis
+   :alt: Travis CI
 .. image:: https://img.shields.io/coveralls/github/mozilla/servicebook-web/master.svg
    :target: https://coveralls.io/github/mozilla/servicebook-web?branch=master
    :alt: Coverage
