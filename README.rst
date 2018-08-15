@@ -4,12 +4,15 @@ Service Book
 .. image:: https://img.shields.io/badge/license-MPL%202.0-blue.svg
    :target: https://github.com/mozilla/servicebook-web/blob/master/LICENSE.txt
    :alt: License
-.. image:: http://coveralls.io/repos/github/mozilla/servicebook-web/badge.svg?branch=master
+.. image:: https://img.shields.io/circleci/project/github/mozilla/servicebook-web/master.svg?logo=circleci
+   :alt: CircleCI
+   :target: https://circleci.com/gh/mozilla/servicebook/tree/master
+.. image:: https://img.shields.io/travis/mozilla/servicebook-web/master.svg?logo=travis
+   :target: https://travis-ci.org/mozilla/servicebook-web
+   :alt: Travis CI
+.. image:: https://img.shields.io/coveralls/github/mozilla/servicebook-web/master.svg
    :target: https://coveralls.io/github/mozilla/servicebook-web?branch=master
    :alt: Coverage
-.. image:: http://travis-ci.org/mozilla/servicebook-web.svg?branch=master
-   :target: https://travis-ci.org/mozilla/servicebook-web
-   :alt: Travis
 .. image:: https://pyup.io/repos/github/mozilla/servicebook-web/shield.svg
    :target: https://pyup.io/repos/github/mozilla/servicebook-web/
    :alt: Updates
