@@ -191,10 +191,9 @@
         },
         "flask-pyoidc": {
             "hashes": [
-                "sha256:d364cafc8b97a67d1ad918a0e18e34ce0537c5f2f02856ab5948572d4db393a5"
+                "sha256:7ce1047cd5c490d9e5cc71a7e9d032da092079d7287cefcb8e9f28bf8135f8e8"
             ],
-            "index": "pypi",
-            "version": "==1.2.0"
+            "version": "==1.3.0"
         },
         "flask-restless": {
             "editable": true,
