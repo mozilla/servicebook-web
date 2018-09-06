@@ -36,7 +36,7 @@ def logout():
         if field in session:
             del session[field]
     flash('Logged out')
-    return safe_redirect('/')
+    return safe_redirect('/oidc/logout')
 
 
 def unauthorized_view(error):

@@ -1,7 +1,8 @@
+import os
 from urllib.parse import urlparse
 from functools import wraps
 from flask_pyoidc.flask_pyoidc import OIDCAuthentication
-from flask import session, abort, g, jsonify
+from flask import session, abort, g, jsonify, request, flash
 
 
 class ScopedAuth(OIDCAuthentication):
@@ -32,16 +33,36 @@ def oidc2dbuser(oidc_user):
 
 
 def get_user(app):
+    is_dev = os.environ.get('FLASK_ENV') == 'development'
+
+    def print_dev(msg):
+        if not is_dev:
+            return
+        print('[auth debug] ' + msg)
+
     if 'user' in session:
+        print_dev('user already in session')
         return session['user']
 
-    if 'userinfo' not in session:
-        return None
+    remote = request.remote_user or os.environ.get('REMOTE_USER')
+    if not remote:
+        remote = request.headers.get('OIDC_CLAIM_ID_TOKEN_EMAIL')
 
-    try:
-        return oidc2dbuser(session['userinfo'])
-    except NotRegisteredError:
-        return None
+    if remote:
+        print_dev('got a remote user %s' % remote)
+        filters = [{'name': 'email', 'op': 'eq', 'val': remote}]
+        res = g.db.get_entries('user', filters=filters)
+        if len(res) == 1:
+            print_dev('got one match in the db')
+            db_user = res[0]
+            session['user_id'] = db_user['id']
+            session['user'] = db_user
+            flash('Logged in as ' + str(db_user))
+            return db_user
+        else:
+            print_dev('no match')
+
+    return None
 
 
 def only_for_editors(func):

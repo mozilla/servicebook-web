@@ -28,7 +28,7 @@ import humanize
 HERE = os.path.dirname(__file__)
 DEFAULT_INI_FILE = os.path.join(HERE, '..', 'serviceweb.ini')
 _FONTS = os.path.join(HERE, 'fonts')
-_DEBUG = False
+_DEBUG = os.environ.get('FLASK_ENV') == 'development'
 sentry = Sentry()
 
 
@@ -44,6 +44,7 @@ def create_app(ini_file=DEFAULT_INI_FILE):
     else:
         sentry_enabled = False
 
+    app.session_cookie_name = 'flask_session'
     Bootstrap(app)
     oidc = OIDConnect(app, **app.config['oidc'])
     Mozillians(app)
