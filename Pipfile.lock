@@ -292,9 +292,9 @@
         },
         "oic": {
             "hashes": [
-                "sha256:2138355fbdc8847d5229fa9ce813e098dc18d3be6e142fdf591587ceac2f6210"
+                "sha256:b276b7072c6817680b54925e3a664d036415a00a524b6847a6bfe55f3135059f"
             ],
-            "version": "==0.11.0.1"
+            "version": "==0.14.0"
         },
         "pycparser": {
             "hashes": [
