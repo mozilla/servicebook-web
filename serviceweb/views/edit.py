@@ -34,14 +34,19 @@ def edit_table(table_name, entry_id):
     if request.method == 'POST':
         bust_cache = request.form.get('bust_cache', bust_cache)
     bust_cache = bust_cache is not None
-
     entry = g.db.get_entry(table_name, entry_id, bust_cache=bust_cache)
     fields = '/%s/%d/fields' % (table_name, entry_id)
-    form = get_form(table_name)(request.form, entry)
-    form.meta.fields_url = fields
     from_ = request.args.get('from_', '/%s/%d' % (table_name, entry_id))
 
-    if request.method == 'POST' and form.validate():
+    if request.method == 'POST':
+        formdata = request.form
+    else:
+        formdata = None
+
+    form = get_form(table_name)(formdata, entry)
+    form.meta.fields_url = fields
+
+    if formdata and form.validate():
         form.populate_obj(entry)
         g.db.update_entry(table_name, entry)
         from_ = request.form.get('from_', from_)
