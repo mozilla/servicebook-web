@@ -27,7 +27,7 @@ import humanize
 
 HERE = os.path.dirname(__file__)
 DEFAULT_INI_FILE = os.path.join(HERE, '..', 'serviceweb.ini')
-_FONTS = os.path.join(HERE, 'fonts')
+_FONTS = os.path.abspath(os.path.join(HERE, 'fonts'))
 _DEBUG = os.environ.get('FLASK_ENV') == 'development'
 sentry = Sentry()
 
