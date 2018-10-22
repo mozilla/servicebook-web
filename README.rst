@@ -13,9 +13,9 @@ Service Book
 .. image:: https://img.shields.io/coveralls/github/mozilla/servicebook-web/master.svg
    :target: https://coveralls.io/github/mozilla/servicebook-web?branch=master
    :alt: Coverage
-.. image:: https://pyup.io/repos/github/mozilla/servicebook-web/shield.svg
-   :target: https://pyup.io/repos/github/mozilla/servicebook-web/
-   :alt: Updates
+.. image:: https://api.dependabot.com/badges/status?host=github&repo=mozilla/fxapom
+   :target: https://dependabot.com
+   :alt: Dependabot
 
 Small dashboard that lists all QA projects, and displays their Swagger
 documentation and everything we have about them.
