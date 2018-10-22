@@ -440,9 +440,9 @@
         },
         "sqlalchemy-utils": {
             "hashes": [
-                "sha256:4119204ff302906015516992b7481e5aabeeaa61c7b04329f9113e42c097b855"
+                "sha256:45ab41c90bfb8dd676e83179be3088b3f2d64b613e3b590187163dd941c22d4c"
             ],
-            "version": "==0.33.3"
+            "version": "==0.33.6"
         },
         "ujson": {
             "hashes": [
