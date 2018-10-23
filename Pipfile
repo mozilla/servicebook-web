@@ -18,7 +18,7 @@ Flask-WTF = "==0.14.2"
 humanize = "==0.5.1"
 PyYAML = "==3.12"
 raven = {version = "==6.6.0", extras = ["flask"]}
-requests = "==2.19.1"
+requests = "==2.20.0"
 restjson = {editable = true, git = "https://github.com/tarekziade/restjson.git"}
 servicebook = {git = "https://github.com/mozilla/servicebook.git", editable = true}
 servicebook-web = {editable = true, path = "."}
