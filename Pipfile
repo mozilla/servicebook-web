@@ -10,7 +10,7 @@ Flask-Bootstrap = "==3.3.7.1"
 Flask-INIConfig = "==0.1.0"
 Flask-Markdown = "==0.3"
 flask-nav = "==0.6"
-Flask-pyoidc = "==1.2.0"
+Flask-pyoidc = "==2.0.0"
 flask-restless = {git = "https://github.com/jfinkels/flask-restless.git", editable = true}
 flask-restless-swagger = {git = "https://github.com/tarekziade/flask-restless-swagger.git", editable = true}
 flask-secure-headers = {editable = true, git = "https://github.com/tarekziade/flask-secure-headers.git"}
