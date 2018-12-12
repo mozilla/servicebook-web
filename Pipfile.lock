@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "a6d2ab23f072675e4addfc7c1ac2a718dc5783a98c883f403d434f53c53c07e8"
+            "sha256": "0e3c2c0b24ea67b439d6c953554f912b8adc264d71521537636779223d8bf92d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -44,18 +44,18 @@
         },
         "boto3": {
             "hashes": [
-                "sha256:60c760da488deed3fdec7dca2fb0a37ece72d8b9e80f3f3fc47bd6a396ea11b6",
-                "sha256:e7f52af8a5cb98d976f296d4a4ac1ac43c7b414c3765ca82c92b033cd06710c2"
+                "sha256:3533ae8c998d85df4df4a01c1b33d64de861992ee06bd70cd02ff3533adb8b46",
+                "sha256:4adfd7fc14417e925398d5e5df3a3050e74a14b13e17fab5f61bee72a87c6ee4"
             ],
             "index": "pypi",
-            "version": "==1.7.50"
+            "version": "==1.9.63"
         },
         "botocore": {
             "hashes": [
-                "sha256:380852e1adb9ba4ba9ff096af61f88a6888197b86e580e1bd786f04ebe6f9c0c",
-                "sha256:d3e4b5a2c903ea30d19d41ea2f65d0e51dce54f4f4c4dfd6ecd7b04f240844a8"
+                "sha256:3b765835d30f192f9f60b17f48573602e972cec3233868485b43a41514ad8f28",
+                "sha256:93224e103a227dc7e3bdf7742f66081b2a99f0965adce790474327f41f83b2a7"
             ],
-            "version": "==1.10.84"
+            "version": "==1.12.63"
         },
         "certifi": {
             "hashes": [
@@ -474,6 +474,7 @@
                 "sha256:61bf29cada3fc2fbefad4fdf059ea4bd1b4a86d2b6d15e1c7c0b582b9752fe39",
                 "sha256:de9529817c93f27c8ccbfead6985011db27bd0ddfcdb2d86f3f663385c6a9c22"
             ],
+            "markers": "python_version >= '3.4'",
             "version": "==1.24.1"
         },
         "uwsgi": {
@@ -720,6 +721,7 @@
                 "sha256:61bf29cada3fc2fbefad4fdf059ea4bd1b4a86d2b6d15e1c7c0b582b9752fe39",
                 "sha256:de9529817c93f27c8ccbfead6985011db27bd0ddfcdb2d86f3f663385c6a9c22"
             ],
+            "markers": "python_version >= '3.4'",
             "version": "==1.24.1"
         },
         "waitress": {
