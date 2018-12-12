@@ -17,7 +17,7 @@ flask-secure-headers = {editable = true, git = "https://github.com/tarekziade/fl
 Flask-WTF = "==0.14.2"
 humanize = "==0.5.1"
 PyYAML = "==3.13"
-raven = {version = "==6.6.0", extras = ["flask"]}
+raven = {version = "==6.9.0", extras = ["flask"]}
 requests = "==2.21.0"
 restjson = {editable = true, git = "https://github.com/tarekziade/restjson.git"}
 servicebook = {git = "https://github.com/mozilla/servicebook.git", editable = true}
