@@ -29,7 +29,7 @@ coverage = "*"
 flake8 = "==3.6.0"
 flask-webtest = "==0.0.9"
 nose = "*"
-requests-mock = "==1.5.0"
+requests-mock = "==1.5.2"
 
 [requires]
 python_version = "3.5"
