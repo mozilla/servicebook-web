@@ -16,7 +16,7 @@ flask-restless-swagger = {git = "https://github.com/tarekziade/flask-restless-sw
 flask-secure-headers = {editable = true, git = "https://github.com/tarekziade/flask-secure-headers.git"}
 Flask-WTF = "==0.14.2"
 humanize = "==0.5.1"
-PyYAML = "==3.12"
+PyYAML = "==3.13"
 raven = {version = "==6.6.0", extras = ["flask"]}
 requests = "==2.21.0"
 restjson = {editable = true, git = "https://github.com/tarekziade/restjson.git"}
