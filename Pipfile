@@ -22,7 +22,7 @@ requests = "==2.21.0"
 restjson = {editable = true, git = "https://github.com/tarekziade/restjson.git"}
 servicebook = {git = "https://github.com/mozilla/servicebook.git", editable = true}
 servicebook-web = {editable = true, path = "."}
-uwsgi = "==2.0.17"
+uwsgi = "==2.0.17.1"
 
 [dev-packages]
 coverage = "*"
