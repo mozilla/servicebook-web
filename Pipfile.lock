@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "3cd73902b9f9fc4f703a55ebe87f295c9e40b0aa861fa62f4816ea5e2b42d9e3"
+            "sha256": "54bbab66565016f121bd15eb123d8c697ed8ad0270760b2e5432b24e116dfe7a"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -193,10 +193,10 @@
         },
         "flask-pyoidc": {
             "hashes": [
-                "sha256:d364cafc8b97a67d1ad918a0e18e34ce0537c5f2f02856ab5948572d4db393a5"
+                "sha256:6a8fac4459ae5c65f710ec77877391d55b338068405b89f1f4a4394770ef1114"
             ],
             "index": "pypi",
-            "version": "==1.2.0"
+            "version": "==2.0.0"
         },
         "flask-restless": {
             "editable": true,
@@ -317,9 +317,9 @@
         },
         "oic": {
             "hashes": [
-                "sha256:2138355fbdc8847d5229fa9ce813e098dc18d3be6e142fdf591587ceac2f6210"
+                "sha256:34da42f4f9b4a36a02b28d72a42a3197a91e7efc5356c1c41d7f1a0bdf3ad1d2"
             ],
-            "version": "==0.11.0.1"
+            "version": "==0.12"
         },
         "pycparser": {
             "hashes": [
